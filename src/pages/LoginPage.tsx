@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
+import AIProfesionalLogo from "common/assets/AIProfesionalLogo.svg"
 import GithubButton from "common/components/Buttons/GithubButton"
 import GoogleButton from "common/components/Buttons/GoogleButton"
 import { FORGOT_PASSWORD_PATH, REGISTER_PATH, ROOT_PATH } from "common/routes"
@@ -60,13 +61,23 @@ const LoginPage = () => {
           }}
         >
           <Stack spacing={3}>
+            {/* Logo */}
+            <Box>
+              <Box
+                component="img"
+                src={AIProfesionalLogo}
+                alt="AIProfesional Logo"
+                sx={{
+                  height: "auto",
+                  width: "auto",
+                }}
+              />
+            </Box>
+
             {/* Logo y título */}
             <Box textAlign="left">
-              <Typography variant="h3" fontWeight={700} gutterBottom>
-                Welcome back
-              </Typography>
               <Typography variant="body2" color="text.secondary">
-                Sign in to your account
+                Inicia sesión en tu cuenta
               </Typography>
             </Box>
 
@@ -79,7 +90,7 @@ const LoginPage = () => {
             {/* Divider "or" */}
             <Box sx={{ my: 1 }}>
               <Divider>
-                <Typography variant="body2">Or</Typography>
+                <Typography variant="body2">O</Typography>
               </Divider>
             </Box>
 
@@ -92,7 +103,7 @@ const LoginPage = () => {
                 <Form autoComplete="off">
                   <Stack spacing={2}>
                     <TextField
-                      label="Email"
+                      label="Correo electrónico"
                       name="email"
                       type="email"
                       fullWidth
@@ -100,12 +111,12 @@ const LoginPage = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       autoFocus
-                      placeholder="you@example.com"
+                      placeholder="tu@ejemplo.com"
                       error={touched.email && Boolean(errors.email)}
                       helperText={touched.email && errors.email}
                     />
                     <TextField
-                      label="Password"
+                      label="Contraseña"
                       name="password"
                       type={showPassword ? "text" : "password"}
                       fullWidth
@@ -149,7 +160,7 @@ const LoginPage = () => {
                         fontSize={14}
                         onClick={handleForgotPassword}
                       >
-                        Forgot Password?
+                        ¿Olvidaste tu contraseña?
                       </Link>
                     </Box>
 
@@ -160,7 +171,7 @@ const LoginPage = () => {
                       fullWidth
                       disableElevation
                     >
-                      Sign In
+                      Iniciar Sesión
                     </Button>
                   </Stack>
                 </Form>
@@ -170,7 +181,7 @@ const LoginPage = () => {
             {/* Sign up link */}
             <Box textAlign="center" mt={1}>
               <Typography variant="body2" display="inline" color="#aaa">
-                Don&apos;t have an account?
+                ¿No tienes una cuenta?
               </Typography>
               <Link
                 href="#"
@@ -179,20 +190,20 @@ const LoginPage = () => {
                 typography="body2"
                 onClick={handleSignUp}
               >
-                Sign Up Now
+                Regístrate Ahora
               </Link>
             </Box>
           </Stack>
           {/* Aviso legal */}
           <Box mt={4} textAlign="center">
             <Typography variant="caption" color="#aaa">
-              By continuing, you agree to our{" "}
+              Al continuar, aceptas nuestros{" "}
               <Link href="#" color="#aaa" underline="always">
-                Terms of Service
+                Términos de Servicio
               </Link>{" "}
-              and{" "}
+              y{" "}
               <Link href="#" color="#aaa" underline="always">
-                Privacy Policy
+                Política de Privacidad
               </Link>
               .
             </Typography>
@@ -227,9 +238,9 @@ const LoginPage = () => {
             >
               &ldquo;
             </Box>
-            Create stunning landing pages in minutes with AI.
+            Crea páginas de aterrizaje impresionantes en minutos con IA.
             <br />
-            Unlock your brand's potential!{" "}
+            ¡Desbloquea el potencial de tu marca!{" "}
             <Box
               component="span"
               sx={theme => ({ color: theme.palette.primary.main })}
@@ -278,7 +289,7 @@ const LoginPage = () => {
                 @digitaldaswani
               </Typography>
               <Typography variant="body2" color="primary.main">
-                Product Hunter
+                Cazador de Productos
               </Typography>
             </Box>
           </Box>
