@@ -157,7 +157,7 @@ const HomePage = () => {
             onClick={handleGenerateNews}
             sx={{
               width: "100%",
-              maxWidth: 480,
+              maxWidth: 650,
               background: "rgba(255,255,255,0.1)",
               backdropFilter: "blur(10px)",
               border: "1px solid rgba(255,255,255,0.2)",
