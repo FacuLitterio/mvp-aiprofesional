@@ -1,0 +1,6 @@
+export const ROOT_PATH = "/"
+export const LOGIN_PATH = "/login"
+export const FORGOT_PASSWORD_PATH = "/forgot-password"
+export const REGISTER_PATH = "/register"
+export const CONFIRMATION_EMAIL_PATH = "/confirmation-email"
+export const RESET_PASSWORD_PATH = "/reset-password"
