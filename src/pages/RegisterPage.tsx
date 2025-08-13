@@ -23,31 +23,33 @@ import { useNavigate } from "react-router-dom"
 import * as Yup from "yup"
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  email: Yup.string()
+    .email("Correo electrónico inválido")
+    .required("El correo electrónico es requerido"),
   password: Yup.string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters")
-    .matches(/[A-Z]/, "Must contain an uppercase letter")
-    .matches(/[a-z]/, "Must contain a lowercase letter")
-    .matches(/[0-9]/, "Must contain a number")
-    .matches(/[^A-Za-z0-9]/, "Must contain a symbol"),
+    .required("La contraseña es requerida")
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .matches(/[A-Z]/, "Debe contener una letra mayúscula")
+    .matches(/[a-z]/, "Debe contener una letra minúscula")
+    .matches(/[0-9]/, "Debe contener un número")
+    .matches(/[^A-Za-z0-9]/, "Debe contener un símbolo"),
 })
 
 const passwordChecks = [
   {
-    label: "Uppercase & Lowercase letter",
+    label: "Letra mayúscula y minúscula",
     test: (pw: string) => /[A-Z]/.test(pw) && /[a-z]/.test(pw),
   },
   {
-    label: "Number",
+    label: "Número",
     test: (pw: string) => /[0-9]/.test(pw),
   },
   {
-    label: "Symbol",
+    label: "Símbolo",
     test: (pw: string) => /[^A-Za-z0-9]/.test(pw),
   },
   {
-    label: "Minimum 8 characters",
+    label: "Mínimo 8 caracteres",
     test: (pw: string) => pw.length >= 8,
   },
 ]
@@ -91,10 +93,10 @@ const RegisterPage = () => {
             {/* Logo y título */}
             <Box textAlign="left" mb={1}>
               <Typography variant="h3" fontWeight={700} gutterBottom>
-                Get started
+                Comienza
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Create a new account
+                Crea una nueva cuenta
               </Typography>
             </Box>
 
@@ -115,7 +117,7 @@ const RegisterPage = () => {
                 <Form autoComplete="off">
                   <Stack spacing={2}>
                     <TextField
-                      label="Email"
+                      label="Correo electrónico"
                       name="email"
                       type="email"
                       fullWidth
@@ -124,12 +126,12 @@ const RegisterPage = () => {
                       onBlur={handleBlur}
                       required
                       autoFocus
-                      placeholder="you@example.com"
+                      placeholder="tu@ejemplo.com"
                       error={touched.email && Boolean(errors.email)}
                       helperText={touched.email && errors.email}
                     />
                     <TextField
-                      label="Password"
+                      label="Contraseña"
                       name="password"
                       type={showPassword ? "text" : "password"}
                       fullWidth
@@ -198,7 +200,7 @@ const RegisterPage = () => {
                       disabled={isSubmitting}
                       disableElevation
                     >
-                      Sign Up
+                      Registrarse
                     </Button>
                   </Stack>
                 </Form>
@@ -208,7 +210,7 @@ const RegisterPage = () => {
             {/* Sign in link */}
             <Stack direction="row" justifyContent="center" spacing={0.5}>
               <Typography variant="body2" display="inline" color="#aaa">
-                Already have an account?
+                ¿Ya tienes una cuenta?
               </Typography>
               <Link
                 component="button"
@@ -217,20 +219,20 @@ const RegisterPage = () => {
                 typography="body2"
                 onClick={handleGoToLogin}
               >
-                Sign In Now
+                Inicia Sesión Ahora
               </Link>
             </Stack>
           </Stack>
           {/* Aviso legal */}
           <Box mt={4} textAlign="center">
             <Typography variant="caption" color="#aaa">
-              By continuing, you agree to our{" "}
+              Al continuar, aceptas nuestros{" "}
               <Link href="#" color="#aaa" underline="always">
-                Terms of Service
+                Términos de Servicio
               </Link>{" "}
-              and{" "}
+              y{" "}
               <Link href="#" color="#aaa" underline="always">
-                Privacy Policy
+                Política de Privacidad
               </Link>
               .
             </Typography>
@@ -265,9 +267,9 @@ const RegisterPage = () => {
             >
               &ldquo;
             </Box>
-            Landyf.ai made launching my product so much easier.
+            Landyf.ai hizo que lanzar mi producto fuera mucho más fácil.
             <br />
-            The AI-generated landing page was spot on!
+            ¡La página de aterrizaje generada por IA fue perfecta!
             <Box
               component="span"
               sx={theme => ({ color: theme.palette.primary.main })}
@@ -317,7 +319,7 @@ const RegisterPage = () => {
                 @sarah.codes
               </Typography>
               <Typography variant="body2" color="primary.main">
-                Indie Maker
+                Creadora Independiente
               </Typography>
             </Box>
           </Box>

@@ -53,10 +53,10 @@ const ConfirmationEmailPage = () => {
         <Stack spacing={3}>
           <Box textAlign="center">
             <Typography variant="h3" fontWeight={700} gutterBottom>
-              Check Your Email
+              Revisa tu Correo
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              We've sent a verification link to
+              Hemos enviado un enlace de verificación a
             </Typography>
             <Typography
               variant="body1"
@@ -74,11 +74,12 @@ const ConfirmationEmailPage = () => {
 
           <Box textAlign="center">
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Click the link in the email to verify your account and complete
-              your registration.
+              Haz clic en el enlace del correo para verificar tu cuenta y
+              completar tu registro.
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Didn't receive the email? Check your spam folder or try resending.
+              ¿No recibiste el correo? Revisa tu carpeta de spam o intenta
+              reenviarlo.
             </Typography>
           </Box>
 
@@ -93,10 +94,10 @@ const ConfirmationEmailPage = () => {
               }}
             >
               {loading
-                ? "Sending..."
+                ? "Enviando..."
                 : resendSuccess
-                  ? "Email Sent!"
-                  : "Resend Verification Email"}
+                  ? "¡Correo Enviado!"
+                  : "Reenviar Correo de Verificación"}
             </Button>
 
             <Button
@@ -110,13 +111,13 @@ const ConfirmationEmailPage = () => {
               fullWidth
               disableElevation
             >
-              Back to Sign In
+              Volver a Iniciar Sesión
             </Button>
           </Stack>
 
           <Stack direction="row" justifyContent="center" spacing={0.5}>
             <Typography variant="body2" display="inline" color="text.secondary">
-              Need help?
+              ¿Necesitas ayuda?
             </Typography>
             <Link
               component="button"
@@ -128,7 +129,7 @@ const ConfirmationEmailPage = () => {
               }}
               sx={{ fontWeight: 500 }}
             >
-              Contact Support
+              Contactar Soporte
             </Link>
           </Stack>
         </Stack>

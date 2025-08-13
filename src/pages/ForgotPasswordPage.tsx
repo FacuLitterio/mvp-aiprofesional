@@ -48,11 +48,11 @@ const ForgotPasswordPage = () => {
         <Stack spacing={3}>
           <Box textAlign="left">
             <Typography variant="h3" fontWeight={700} gutterBottom>
-              Reset Your Password
+              Restablece tu Contraseña
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Type in your email and we'll send you a link to reset your
-              password
+              Ingresa tu correo electrónico y te enviaremos un enlace para
+              restablecer tu contraseña
             </Typography>
           </Box>
           <form
@@ -63,7 +63,7 @@ const ForgotPasswordPage = () => {
           >
             <Stack spacing={2}>
               <TextField
-                label="Email"
+                label="Correo electrónico"
                 name="email"
                 type="email"
                 fullWidth
@@ -73,7 +73,7 @@ const ForgotPasswordPage = () => {
                 }}
                 required
                 autoFocus
-                placeholder="you@example.com"
+                placeholder="tu@ejemplo.com"
                 disabled={loading || success}
               />
               <Button
@@ -89,16 +89,16 @@ const ForgotPasswordPage = () => {
                 disabled={loading || success}
               >
                 {loading
-                  ? "Sending..."
+                  ? "Enviando..."
                   : success
-                    ? "Email Sent!"
-                    : "Send Reset Email"}
+                    ? "¡Correo Enviado!"
+                    : "Enviar Correo de Restablecimiento"}
               </Button>
             </Stack>
           </form>
           <Stack direction="row" justifyContent="center" spacing={0.5}>
             <Typography variant="body2" display="inline" color="text.secondary">
-              Already have an account?
+              ¿Ya tienes una cuenta?
             </Typography>
             <Link
               component="button"
@@ -109,7 +109,7 @@ const ForgotPasswordPage = () => {
               }}
               sx={{ fontWeight: 500 }}
             >
-              Sign In
+              Iniciar Sesión
             </Link>
           </Stack>
         </Stack>

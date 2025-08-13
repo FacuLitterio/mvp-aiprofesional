@@ -238,21 +238,21 @@ const LoginPage = () => {
             >
               &ldquo;
             </Box>
-            Crea páginas de aterrizaje impresionantes en minutos con IA.
+            Con AIProfesional, generamos noticias SEO-optimizadas en minutos.
             <br />
-            ¡Desbloquea el potencial de tu marca!{" "}
+            ¡Acelera nuestra producción sin comprometer la calidad periodística!{" "}
             <Box
               component="span"
               sx={theme => ({ color: theme.palette.primary.main })}
             >
-              #AILanding
+              #AIProfesional
             </Box>
             <br />
             <Box
               component="span"
               sx={theme => ({ color: theme.palette.primary.main })}
             >
-              #NextLevel
+              #PeriodismoDigital
             </Box>
             <Box
               component="span"
@@ -286,10 +286,10 @@ const LoginPage = () => {
             />
             <Box>
               <Typography fontWeight={600} color="text.primary">
-                @digitaldaswani
+                Norberto Zocco
               </Typography>
               <Typography variant="body2" color="primary.main">
-                Cazador de Productos
+                CEO & Founder
               </Typography>
             </Box>
           </Box>
