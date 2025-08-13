@@ -25,7 +25,7 @@ const GithubButton: React.FC = () => {
         />
       }
     >
-      Sign in with GitHub
+      Ingresar con GitHub
     </Button>
   )
 }

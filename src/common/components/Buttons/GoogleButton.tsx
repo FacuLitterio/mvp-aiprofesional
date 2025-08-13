@@ -25,7 +25,7 @@ const GoogleButton: React.FC = () => {
         />
       }
     >
-      Sign in with Google
+      Ingresar con Google
     </Button>
   )
 }
