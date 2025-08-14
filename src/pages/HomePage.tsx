@@ -30,16 +30,16 @@ const HomePage = () => {
       }}
     >
       {/* Main Content */}
-      <Container maxWidth="sm" sx={{ pt: 12, pb: 4 }}>
+      <Container maxWidth="sm" sx={{ pt: 8, pb: 4 }}>
         <Stack spacing={4} alignItems="center">
           {/* Welcome Section */}
-          <Box textAlign="center" sx={{ mt: 4 }}>
+          <Box textAlign="center">
             {/* AI Avatar */}
             <Box
               sx={{
                 position: "relative",
                 display: "inline-block",
-                mb: 3,
+                mb: 2,
               }}
             >
               <Box
