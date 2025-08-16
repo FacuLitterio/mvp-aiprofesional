@@ -9,15 +9,17 @@ import {
   useTheme,
 } from "@mui/material"
 import AIProfesionalAvatar from "common/assets/AIProfesionalAvatar.png"
+import { NEW_PATH } from "common/routes"
 import { useState } from "react"
+import { useNavigate } from "react-router"
 
 const HomePage = () => {
   const theme = useTheme()
+  const navigate = useNavigate()
   const [isHovered, setIsHovered] = useState(false)
 
   const handleGenerateNews = () => {
-    // TODO: Implement news generation functionality
-    console.log("Generating SEO-optimized news...")
+    void navigate(NEW_PATH)
   }
 
   return (

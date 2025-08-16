@@ -2,9 +2,11 @@ import {
   CONFIRMATION_EMAIL_PATH,
   FORGOT_PASSWORD_PATH,
   LOGIN_PATH,
+  NEW_PATH,
   REGISTER_PATH,
   RESET_PASSWORD_PATH,
 } from "common/routes"
+import NewArticle from "features/NewArticle"
 import ConfirmationEmailPage from "pages/ConfirmationEmailPage"
 import ForgotPasswordPage from "pages/ForgotPasswordPage"
 import HomePage from "pages/HomePage"
@@ -39,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: RESET_PASSWORD_PATH,
     element: <ResetPasswordPage />,
+  },
+  {
+    path: NEW_PATH,
+    element: <NewArticle />,
   },
   {
     path: "*",
