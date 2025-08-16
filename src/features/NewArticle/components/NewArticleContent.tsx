@@ -46,7 +46,7 @@ export const NewArticleContent = () => {
           orientation={isMobile ? "vertical" : "horizontal"}
           sx={{
             "& .MuiStepLabel-root .Mui-completed": {
-              color: theme.palette.success.main,
+              color: theme.palette.primary.main,
             },
             "& .MuiStepLabel-root .Mui-active": {
               color: theme.palette.primary.main,

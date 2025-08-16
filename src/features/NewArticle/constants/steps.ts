@@ -31,7 +31,7 @@ export const STEP_CONTENT: Record<number, StepContent> = {
   2: {
     title: "Configurar Metadatos",
     description:
-      "Define los metadatos necesarios para mejorar el posicionamiento en buscadores.",
+      "Completa los metadatos para optimizar tu artículo en el CMS de IProfesional y mejorar el posicionamiento SEO.",
   },
   3: {
     title: "Vista Previa y Exportar",
