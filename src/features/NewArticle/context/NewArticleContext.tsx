@@ -167,8 +167,7 @@ const generateAlternativeMockMetadata = (): Metadata => ({
 export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
   const [state, setState] = useState<NewArticleState>({
     activeStep: 0,
-    articleContent:
-      "Breakthrough in AI: xAI Unveils Grok 5, Revolutionizing Human-Machine Interaction\n\nxAI, the artificial intelligence company founded by Elon Musk, has unveiled Grok 5, its most advanced AI model to date. This breakthrough represents a significant leap forward in human-machine interaction capabilities.\n\nGrok 5 demonstrates unprecedented abilities in natural language understanding, creative problem-solving, and real-time data analysis. The model's enhanced multimodal processing allows it to seamlessly integrate text, images, and video inputs, making it one of the most versatile AI systems ever developed.\n\n\"We're not just building smarter AI; we're creating companions that understand the world like we do,\" said Elon Musk during the virtual launch event, which was streamed live on X.",
+    articleContent: "",
     titles: generateMockTitles(),
     metadata: generateMockMetadata(),
   })

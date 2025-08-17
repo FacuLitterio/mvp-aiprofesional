@@ -1,4 +1,5 @@
 import {
+  AutoAwesome as AutoAwesomeIcon,
   Check as CheckIcon,
   Close as CloseIcon,
   Edit as EditIcon,
@@ -53,6 +54,7 @@ export const TitlesStep = () => {
   const { state, updateTitle, regenerateTitles } = useNewArticleContext()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState("")
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
 
   const handleEditStart = (title: { id: string; title: string }) => {
     setEditingId(title.id)
@@ -86,7 +88,11 @@ export const TitlesStep = () => {
       {/* Header */}
       <Box sx={{ mb: 3 }}>
         {/* Regenerate Button */}
-        <Button variant="outlined" onClick={regenerateTitles}>
+        <Button
+          variant="outlined"
+          onClick={regenerateTitles}
+          startIcon={<AutoAwesomeIcon />}
+        >
           Regenerar Títulos
         </Button>
       </Box>
@@ -121,6 +127,12 @@ export const TitlesStep = () => {
               }}
               onClick={() => {
                 handleTitleSelect(title.id)
+              }}
+              onMouseEnter={() => {
+                setHoveredCard(title.id)
+              }}
+              onMouseLeave={() => {
+                setHoveredCard(null)
               }}
             >
               {/* Selection indicator - positioned at top right */}
@@ -184,7 +196,13 @@ export const TitlesStep = () => {
                       e.stopPropagation()
                       handleEditStart(title)
                     }}
-                    sx={{ ml: 1 }}
+                    sx={{
+                      ml: 1,
+                      opacity: hoveredCard === title.id ? 1 : 0,
+                      transition: "opacity 0.2s ease-in-out",
+                      visibility:
+                        hoveredCard === title.id ? "visible" : "hidden",
+                    }}
                   >
                     <EditIcon fontSize="small" />
                   </IconButton>

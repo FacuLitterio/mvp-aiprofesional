@@ -1,4 +1,8 @@
-import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material"
+import {
+  Add as AddIcon,
+  AutoAwesome as AutoAwesomeIcon,
+  Close as CloseIcon,
+} from "@mui/icons-material"
 import {
   Alert,
   Box,
@@ -106,7 +110,12 @@ export const MetadataStep = () => {
       {/* Header */}
       <Box>
         {/* Regenerate Button */}
-        <Button variant="outlined" onClick={regenerateMetadata} sx={{ mb: 3 }}>
+        <Button
+          variant="outlined"
+          onClick={regenerateMetadata}
+          sx={{ mb: 3 }}
+          startIcon={<AutoAwesomeIcon />}
+        >
           Regenerar Metadatos
         </Button>
       </Box>
@@ -164,7 +173,7 @@ export const MetadataStep = () => {
 
             <Alert severity="info" sx={{ mt: 2 }}>
               <Typography variant="body2">
-                <strong>Tip:</strong> Debe ser conciso (127-155 chars) para
+                <strong>Tip:</strong> Debe ser conciso (127-155 caracteres) para
                 aparecer en home y búsquedas; incluye keywords principales.
               </Typography>
             </Alert>
