@@ -56,6 +56,8 @@ type NewArticleContextType = {
   handleRestart: () => void
   // New function to update wizard titles
   updateWizardTitle: (index: number, newTitle: string) => void
+  // Function to update wizard category
+  updateWizardCategory: (category: string) => void
   // Export functions
   copyToClipboard: (content: string) => Promise<void>
   downloadFile: (content: string, filename: string) => void
@@ -260,6 +262,10 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
         category,
         step: 3,
       },
+      metadata: {
+        ...prev.metadata,
+        slug,
+      },
       activeStep: 3, // Update activeStep to navigate to next step
     }))
   }
@@ -272,6 +278,16 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
         titles: prev.wizardState.titles.map((title, i) =>
           i === index ? newTitle : title,
         ),
+      },
+    }))
+  }
+
+  const updateWizardCategory = (category: string) => {
+    setState(prev => ({
+      ...prev,
+      wizardState: {
+        ...prev.wizardState,
+        category,
       },
     }))
   }
@@ -358,11 +374,7 @@ ${state.wizardState.optimizedNews}
   }
 
   const handleRestart = () => {
-    setState(prev => ({
-      ...prev,
-      wizardState: getInitialWizardState(),
-      showError: false,
-    }))
+    setState(getInitialState())
   }
 
   const isStepValid = () => {
@@ -376,10 +388,10 @@ ${state.wizardState.optimizedNews}
         // Validate that a title is selected in wizard state
         return state.wizardState.selectedTitle.length > 0
       case 2:
-        // Validate that metadata has required fields (only slug and sections)
+        // Validate that metadata has required fields (slug and category from wizardState)
         return (
           state.metadata.slug.trim().length > 0 &&
-          state.metadata.sections.principal.trim().length > 0
+          state.wizardState.category.trim().length > 0
         )
       default:
         return true
@@ -410,6 +422,7 @@ ${state.wizardState.optimizedNews}
     handlePublish,
     handleRestart,
     updateWizardTitle,
+    updateWizardCategory,
     copyToClipboard,
     downloadFile,
     generateHTML,

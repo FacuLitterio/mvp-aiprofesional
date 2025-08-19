@@ -1,15 +1,12 @@
 import {
   Alert,
+  Autocomplete,
   Box,
   Card,
   CardContent,
   Chip,
-  FormControl,
   FormControlLabel,
   FormGroup,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Typography,
 } from "@mui/material"
@@ -35,9 +32,11 @@ const AVAILABLE_SECTIONS = [
 ]
 
 export const MetadataStep = () => {
-  const { state, updateMetadata } = useNewArticleContext()
+  const { state, updateMetadata, updateWizardCategory } = useNewArticleContext()
 
   const handleSectionChange = (section: string, isSecondary = false) => {
+    console.log("handleSectionChange called:", { section, isSecondary })
+
     if (isSecondary) {
       const newSecundarias = state.metadata.sections.secundarias.includes(
         section,
@@ -52,12 +51,9 @@ export const MetadataStep = () => {
         },
       })
     } else {
-      updateMetadata({
-        sections: {
-          ...state.metadata.sections,
-          principal: section,
-        },
-      })
+      // Update wizardState directly for the category
+      console.log("Updating wizard category to:", section)
+      updateWizardCategory(section)
     }
   }
 
@@ -67,13 +63,13 @@ export const MetadataStep = () => {
         sx={{
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          gap: 3,
+          gap: { xs: 2, md: 3 },
         }}
       >
         {/* Slug */}
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
+        <Card sx={{ height: "fit-content" }}>
+          <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Slug de la URL
             </Typography>
 
@@ -84,7 +80,7 @@ export const MetadataStep = () => {
                 updateMetadata({ slug: e.target.value })
               }}
               placeholder="presunta-infidelidad-separacion-vazquez-accardi"
-              sx={{ mb: 1 }}
+              sx={{ mb: 2 }}
             />
 
             <Typography
@@ -97,7 +93,7 @@ export const MetadataStep = () => {
             </Typography>
 
             {/* Validation chips */}
-            <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
+            <Box sx={{ display: "flex", gap: 1, mb: 3, flexWrap: "wrap" }}>
               <Chip
                 label={`${state.metadata.slug.length.toString()}/60 caracteres`}
                 color={state.metadata.slug.length > 60 ? "error" : "default"}
@@ -144,7 +140,7 @@ export const MetadataStep = () => {
             {/* URL Preview */}
             <Box
               sx={{
-                p: 2,
+                p: { xs: 1.5, md: 2 },
                 bgcolor: "grey.50",
                 borderRadius: 1,
                 border: "1px solid",
@@ -175,35 +171,45 @@ export const MetadataStep = () => {
         </Card>
 
         {/* Sections */}
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
+        <Card sx={{ height: "fit-content" }}>
+          <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Secciones / Categorías
             </Typography>
 
-            <FormControl fullWidth sx={{ my: 2 }}>
-              <InputLabel>Sección Principal</InputLabel>
-              <Select
-                value={state.metadata.sections.principal}
-                onChange={e => {
-                  handleSectionChange(e.target.value)
-                }}
-                label="Sección Principal"
-              >
-                {AVAILABLE_SECTIONS.map(section => (
-                  <MenuItem key={section} value={section}>
-                    {section}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Autocomplete
+              freeSolo
+              options={AVAILABLE_SECTIONS}
+              value={state.wizardState.category}
+              sx={{ mb: 3 }}
+              onChange={(_, newValue) => {
+                handleSectionChange(newValue ?? "")
+              }}
+              onInputChange={(_, newInputValue) => {
+                // This handles the case when user types custom text
+                if (newInputValue !== state.wizardState.category) {
+                  handleSectionChange(newInputValue)
+                }
+              }}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="Sección Principal"
+                  placeholder="Selecciona o escribe una categoría"
+                />
+              )}
+            />
 
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+            <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 500 }}>
               Secciones Secundarias
             </Typography>
             <FormGroup>
               <Box
-                sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                  gap: { xs: 0.5, sm: 1 },
+                }}
               >
                 {AVAILABLE_SECTIONS.map(section => (
                   <FormControlLabel
@@ -220,7 +226,12 @@ export const MetadataStep = () => {
                       />
                     }
                     label={section}
-                    sx={{ fontSize: "0.875rem" }}
+                    sx={{
+                      fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                      "& .MuiFormControlLabel-label": {
+                        fontSize: "inherit",
+                      },
+                    }}
                   />
                 ))}
               </Box>
@@ -230,13 +241,10 @@ export const MetadataStep = () => {
       </Box>
 
       {/* Current Configuration Alert */}
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: { xs: 2, md: 3 } }}>
         <Alert
           severity="info"
           sx={{
-            backgroundColor: "info.50",
-            border: "1px solid",
-            borderColor: "info.200",
             "& .MuiAlert-message": {
               width: "100%",
             },
@@ -244,11 +252,17 @@ export const MetadataStep = () => {
         >
           <Typography
             variant="subtitle2"
-            sx={{ fontWeight: 600, mb: 2, color: "info.main" }}
+            sx={{ fontWeight: 600, mb: { xs: 1.5, md: 2 }, color: "info.main" }}
           >
             Configuración actual:
           </Typography>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: { xs: 0.5, md: 1 },
+            }}
+          >
             <Box sx={{ display: "flex", alignItems: "baseline" }}>
               <Typography
                 variant="body2"
@@ -271,7 +285,7 @@ export const MetadataStep = () => {
                 Categoría:
               </Typography>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {state.metadata.sections.principal || "No seleccionada"}
+                {state.wizardState.category || "No seleccionada"}
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "baseline" }}>

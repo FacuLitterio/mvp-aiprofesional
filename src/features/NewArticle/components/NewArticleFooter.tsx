@@ -1,9 +1,22 @@
 import {
+  ArrowBack as ArrowBackIcon,
+  ArrowForward as ArrowForwardIcon,
   AutoAwesome,
   ContentCopy as CopyIcon,
   Download as DownloadIcon,
+  RestartAlt as RestartIcon,
 } from "@mui/icons-material"
-import { Box, Button, Container, Paper, useTheme } from "@mui/material"
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Menu,
+  MenuItem,
+  Paper,
+  useTheme,
+} from "@mui/material"
+import { useState } from "react"
 import { NEW_ARTICLE_STEPS } from "../constants/steps"
 import { useNewArticleContext } from "../context/NewArticleContext"
 
@@ -22,6 +35,27 @@ export const NewArticleFooter = () => {
     generateHTML,
     generateMarkdown,
   } = useNewArticleContext()
+
+  // Menu states
+  const [copyMenuAnchor, setCopyMenuAnchor] = useState<null | HTMLElement>(null)
+  const [downloadMenuAnchor, setDownloadMenuAnchor] =
+    useState<null | HTMLElement>(null)
+
+  const handleCopyMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setCopyMenuAnchor(event.currentTarget)
+  }
+
+  const handleCopyMenuClose = () => {
+    setCopyMenuAnchor(null)
+  }
+
+  const handleDownloadMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setDownloadMenuAnchor(event.currentTarget)
+  }
+
+  const handleDownloadMenuClose = () => {
+    setDownloadMenuAnchor(null)
+  }
 
   const handleNextStep = async () => {
     if (state.activeStep === 0) {
@@ -62,8 +96,9 @@ export const NewArticleFooter = () => {
             {state.activeStep > 0 && (
               <Button
                 onClick={handleBack}
-                variant="outlined"
-                color="primary"
+                variant="text"
+                color="secondary"
+                startIcon={<ArrowBackIcon />}
                 sx={{ minWidth: 100 }}
               >
                 Anterior
@@ -71,77 +106,52 @@ export const NewArticleFooter = () => {
             )}
           </Box>
 
-          {/* Center - Export buttons (only on final step) */}
-          {state.activeStep === NEW_ARTICLE_STEPS.length - 1 && (
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <Button
-                variant="outlined"
-                color="info"
-                startIcon={<CopyIcon />}
-                onClick={() => {
-                  void copyToClipboard(generateHTML())
-                }}
-                sx={{ minWidth: 120 }}
-              >
-                Copiar HTML
-              </Button>
-              <Button
-                variant="outlined"
-                color="info"
-                startIcon={<CopyIcon />}
-                onClick={() => {
-                  void copyToClipboard(generateMarkdown())
-                }}
-                sx={{ minWidth: 140 }}
-              >
-                Copiar Markdown
-              </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                startIcon={<DownloadIcon />}
-                onClick={() => {
-                  downloadFile(generateHTML(), `${state.wizardState.slug}.html`)
-                }}
-                sx={{ minWidth: 130 }}
-              >
-                Descargar HTML
-              </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                startIcon={<DownloadIcon />}
-                onClick={() => {
-                  downloadFile(
-                    generateMarkdown(),
-                    `${state.wizardState.slug}.md`,
-                  )
-                }}
-                sx={{ minWidth: 150 }}
-              >
-                Descargar Markdown
-              </Button>
-            </Box>
-          )}
-
           {/* Right side - Action buttons */}
-          <Box sx={{ display: "flex", gap: 1 }}>
+          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
             {state.activeStep === NEW_ARTICLE_STEPS.length - 1 ? (
-              <Button
-                variant="contained"
-                color="warning"
-                onClick={handleReset}
-                sx={{ minWidth: 100 }}
-              >
-                Reiniciar
-              </Button>
+              <>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  startIcon={<CopyIcon />}
+                  onClick={handleCopyMenuOpen}
+                  sx={{ minWidth: 120 }}
+                >
+                  Copiar
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  startIcon={<DownloadIcon />}
+                  onClick={handleDownloadMenuOpen}
+                  sx={{ minWidth: 130 }}
+                >
+                  Descargar
+                </Button>
+                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<RestartIcon />}
+                  onClick={handleReset}
+                  sx={{ minWidth: 100 }}
+                >
+                  Reiniciar
+                </Button>
+              </>
             ) : (
               <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
                 onClick={() => void handleNextStep()}
                 disabled={!isStepValid() || state.loading}
-                startIcon={state.activeStep === 0 ? <AutoAwesome /> : undefined}
+                endIcon={
+                  state.activeStep === 0 ? (
+                    <AutoAwesome />
+                  ) : (
+                    <ArrowForwardIcon />
+                  )
+                }
                 sx={{ minWidth: 100 }}
               >
                 {state.loading && state.activeStep === 0
@@ -154,6 +164,54 @@ export const NewArticleFooter = () => {
           </Box>
         </Box>
       </Container>
+
+      {/* Copy Menu */}
+      <Menu
+        anchorEl={copyMenuAnchor}
+        open={Boolean(copyMenuAnchor)}
+        onClose={handleCopyMenuClose}
+      >
+        <MenuItem
+          onClick={() => {
+            void copyToClipboard(generateHTML())
+            handleCopyMenuClose()
+          }}
+        >
+          Copiar HTML
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            void copyToClipboard(generateMarkdown())
+            handleCopyMenuClose()
+          }}
+        >
+          Copiar Markdown
+        </MenuItem>
+      </Menu>
+
+      {/* Download Menu */}
+      <Menu
+        anchorEl={downloadMenuAnchor}
+        open={Boolean(downloadMenuAnchor)}
+        onClose={handleDownloadMenuClose}
+      >
+        <MenuItem
+          onClick={() => {
+            downloadFile(generateHTML(), `${state.wizardState.slug}.html`)
+            handleDownloadMenuClose()
+          }}
+        >
+          Descargar HTML
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            downloadFile(generateMarkdown(), `${state.wizardState.slug}.md`)
+            handleDownloadMenuClose()
+          }}
+        >
+          Descargar Markdown
+        </MenuItem>
+      </Menu>
     </Paper>
   )
 }
