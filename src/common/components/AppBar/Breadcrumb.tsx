@@ -13,6 +13,7 @@ export const Breadcrumb = () => {
       aria-label="breadcrumb"
       sx={{
         color: "white",
+        visibility: { xs: "hidden", md: "visible" },
         "& .MuiBreadcrumbs-separator": {
           color: "white",
         },

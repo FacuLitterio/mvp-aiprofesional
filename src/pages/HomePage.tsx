@@ -8,6 +8,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material"
+import AIProfesionalLogo from "common/assets/AIProfesional-Logo.svg"
 import AIProfesionalAvatar from "common/assets/AIProfesionalAvatar.png"
 import { AppBar } from "common/components/AppBar"
 import { NEW_PATH, ROOT_PATH } from "common/routes"
@@ -99,18 +100,48 @@ const HomePage = () => {
             </Box>
 
             {/* Greeting */}
-            <Typography
-              variant="h3"
+            <Box
               sx={{
-                color: "white",
-                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1,
                 mb: 2,
-                textShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                fontSize: { xs: "2rem", sm: "2.5rem" },
               }}
             >
-              ¡Hola, soy AiProfesional!
-            </Typography>
+              <Typography
+                variant="h3"
+                sx={{
+                  color: "white",
+                  fontWeight: 700,
+                  textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                  fontSize: { xs: "2rem", sm: "2.5rem" },
+                }}
+              >
+                ¡Hola, soy
+              </Typography>
+              <Box
+                component="img"
+                src={AIProfesionalLogo}
+                alt="AIProfesional Logo"
+                sx={{
+                  width: { xs: 140, sm: 200 },
+                  height: "auto",
+                  filter: "brightness(0) invert(1)",
+                }}
+              />
+              <Typography
+                variant="h3"
+                sx={{
+                  color: "white",
+                  fontWeight: 700,
+                  textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                  fontSize: { xs: "2rem", sm: "2.5rem" },
+                }}
+              >
+                !
+              </Typography>
+            </Box>
 
             {/* Description */}
             <Typography
