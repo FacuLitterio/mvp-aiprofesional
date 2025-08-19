@@ -1,5 +1,4 @@
 import { Box } from "@mui/material"
-import { AIStatusAlert } from "../../common/components/Layout/AIStatusAlert"
 import { LoadingBackdrop } from "../../common/components/Layout/LoadingBackdrop"
 import { NewArticleContent } from "./components/NewArticleContent"
 import { NewArticleFooter } from "./components/NewArticleFooter"
@@ -15,21 +14,13 @@ const NewArticleContentWithProviders = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <NewArticleHeader />
-
-      {/* AI Status Alerts */}
-      <AIStatusAlert
-        showError={state.showError}
-        error={null}
-        step={state.wizardState.step}
-      />
-
       <NewArticleContent />
       <NewArticleFooter />
 
       {/* Loading Backdrop */}
       <LoadingBackdrop
         open={state.loading}
-        message="Generando contenido con IA..."
+        message="Generando Noticia con IA..."
       />
     </Box>
   )

@@ -29,7 +29,7 @@ export const AvatarUser = () => {
   // Mock user data
   const user = {
     name: "Facundo Litterio",
-    email: "facundo.litterio@iprofesional.com",
+    email: "flitterio@turingsoft.dev",
     role: "Redactor",
     initials: "FL",
   }

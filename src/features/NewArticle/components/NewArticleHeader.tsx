@@ -1,5 +1,9 @@
-import { AppBar, Toolbar } from "@mui/material"
-import { AvatarUser, Breadcrumb } from "common/components/AppBar"
+import { AppBar, Box, Toolbar } from "@mui/material"
+import {
+  AvatarUser,
+  Breadcrumb,
+  ConnectionStatusChip,
+} from "common/components/AppBar"
 import { ROOT_PATH } from "common/routes"
 import { useAppDispatch } from "common/store/hooks"
 import {
@@ -31,7 +35,10 @@ export const NewArticleHeader = () => {
     <AppBar position="sticky" elevation={0} color="secondary">
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Breadcrumb />
-        <AvatarUser />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <ConnectionStatusChip />
+          <AvatarUser />
+        </Box>
       </Toolbar>
     </AppBar>
   )
