@@ -56,6 +56,11 @@ type NewArticleContextType = {
   handleRestart: () => void
   // New function to update wizard titles
   updateWizardTitle: (index: number, newTitle: string) => void
+  // Export functions
+  copyToClipboard: (content: string) => Promise<void>
+  downloadFile: (content: string, filename: string) => void
+  generateHTML: () => string
+  generateMarkdown: () => string
 }
 
 const NewArticleContext = createContext<NewArticleContextType | undefined>(
@@ -271,6 +276,81 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
     }))
   }
 
+  // Helper function to generate subtitles from content
+  const generateSubtitles = (content: string): string[] => {
+    const subtitleMatches = content.match(/<h2[^>]*>(.*?)<\/h2>/g)
+    if (subtitleMatches) {
+      return subtitleMatches.map(match =>
+        match.replace(/<h2[^>]*>(.*?)<\/h2>/, "$1"),
+      )
+    }
+    return []
+  }
+
+  // Export functions
+  const generateHTML = () => {
+    const subtitles = generateSubtitles(state.wizardState.optimizedNews || "")
+    const sanitizedContent = (state.wizardState.optimizedNews || "")
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
+
+    return `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${state.wizardState.editableTitle}</title>
+    <meta name="description" content="${subtitles[0] || ""}">
+</head>
+<body>
+    <article>
+        <h1>${state.wizardState.editableTitle}</h1>
+        ${subtitles.map(sub => `<h2>${sub}</h2>`).join("\n        ")}
+        <div>${sanitizedContent}</div>
+        <footer>
+            <p>Categoría: ${state.wizardState.category}</p>
+            <p>Slug: ${state.wizardState.slug}</p>
+        </footer>
+    </article>
+</body>
+</html>`
+  }
+
+  const generateMarkdown = () => {
+    const subtitles = generateSubtitles(state.wizardState.optimizedNews || "")
+    return `# ${state.wizardState.editableTitle}
+
+${subtitles.map(sub => `## ${sub}`).join("\n\n")}
+
+${state.wizardState.optimizedNews}
+
+---
+**Categoría:** ${state.wizardState.category}  
+**Slug:** ${state.wizardState.slug}  
+**Enlaces internos sugeridos:** ${state.wizardState.internalLinks.join(", ")}`
+  }
+
+  const copyToClipboard = async (content: string) => {
+    try {
+      await navigator.clipboard.writeText(content)
+      // Could add a toast notification here
+    } catch (err) {
+      console.error("Failed to copy to clipboard:", err)
+    }
+  }
+
+  const downloadFile = (content: string, filename: string) => {
+    const blob = new Blob([content], { type: "text/plain" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
   const handlePublish = () => {
     // Aquí iría la lógica de publicación real
     alert("¡Noticia publicada exitosamente!")
@@ -330,6 +410,10 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
     handlePublish,
     handleRestart,
     updateWizardTitle,
+    copyToClipboard,
+    downloadFile,
+    generateHTML,
+    generateMarkdown,
   }
 
   return (

@@ -97,7 +97,7 @@ const HomePage = () => {
                 fontSize: { xs: "2rem", sm: "2.5rem" },
               }}
             >
-              ¡Hola, soy AIProfesional!
+              ¡Hola, soy AiProfesional!
             </Typography>
 
             {/* Description */}
