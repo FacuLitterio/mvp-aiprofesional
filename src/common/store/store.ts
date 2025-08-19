@@ -4,6 +4,9 @@ import { setupListeners } from "@reduxjs/toolkit/query"
 import { api } from "../api/api"
 import commonSlices from "./slices"
 
+// Import endpoints to ensure they are injected
+import "../api/Endpoints/NewsApi"
+
 // `combineSlices` automatically combines the reducers using
 // their `reducerPath`s, therefore we no longer need to call `combineReducers`.
 const rootReducer = combineSlices({

@@ -5,6 +5,7 @@ import {
   Edit as EditIcon,
 } from "@mui/icons-material"
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -81,6 +82,46 @@ export const TitlesStep = () => {
     })
     // Select the clicked title
     updateTitle(id, { isSelected: true })
+  }
+
+  // Show empty state if no titles are available
+  if (state.titles.length === 0) {
+    return (
+      <Box sx={{ mt: 3 }}>
+        <Alert severity="info" sx={{ mb: 3 }}>
+          <Typography variant="body2">
+            No hay títulos generados aún. Haz clic en "Generar Títulos" para
+            crear títulos optimizados para tu contenido.
+          </Typography>
+        </Alert>
+
+        <Button
+          variant="contained"
+          onClick={regenerateTitles}
+          startIcon={<AutoAwesomeIcon />}
+          size="large"
+          sx={{ mb: 3 }}
+        >
+          Generar Títulos
+        </Button>
+
+        <Box
+          sx={{
+            mt: 4,
+            p: 2,
+            bgcolor: theme.palette.grey[50],
+            borderRadius: 1,
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            <strong>Instrucciones:</strong> Una vez que se generen los títulos,
+            podrás seleccionar uno como principal y editarlo según tus
+            necesidades. El título seleccionado será el que se use en el
+            artículo final.
+          </Typography>
+        </Box>
+      </Box>
+    )
   }
 
   return (

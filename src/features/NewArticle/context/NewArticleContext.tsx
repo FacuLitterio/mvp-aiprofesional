@@ -1,4 +1,6 @@
 import { createContext, type ReactNode, useContext, useState } from "react"
+import { useNewsGenerator } from "../hooks/useNewsGenerator"
+import type { WizardState } from "../types"
 
 export type TitleSuggestion = {
   id: string
@@ -25,6 +27,10 @@ export type NewArticleState = {
   articleContent: string
   titles: TitleSuggestion[]
   metadata: Metadata
+  // Wizard state
+  wizardState: WizardState
+  showError: boolean
+  loading: boolean
 }
 
 type NewArticleContextType = {
@@ -41,6 +47,12 @@ type NewArticleContextType = {
   handleBack: () => void
   handleReset: () => void
   isStepValid: () => boolean
+  // Wizard functions
+  handleStep0Submit: (news: string) => Promise<void>
+  handleStep1Submit: (title: string) => void
+  handleStep2Submit: (slug: string, category: string) => void
+  handlePublish: () => void
+  handleRestart: () => void
 }
 
 const NewArticleContext = createContext<NewArticleContextType | undefined>(
@@ -50,6 +62,21 @@ const NewArticleContext = createContext<NewArticleContextType | undefined>(
 type NewArticleProviderProps = {
   children: ReactNode
 }
+
+// Initial wizard state
+const getInitialWizardState = (): WizardState => ({
+  step: 0,
+  originalNews: "",
+  selectedTitle: "",
+  editableTitle: "",
+  slug: "",
+  category: "",
+  optimizedNews: "",
+  titles: [],
+  internalLinks: [],
+  subtitles: [],
+  keyTerms: [],
+})
 
 // Initial empty state
 const getInitialState = (): NewArticleState => ({
@@ -68,10 +95,14 @@ const getInitialState = (): NewArticleState => ({
     metaDescription: "",
     subtitles: [],
   },
+  wizardState: getInitialWizardState(),
+  showError: false,
+  loading: false,
 })
 
 export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
   const [state, setState] = useState<NewArticleState>(getInitialState())
+  const { generateNews, generateFallback, loading } = useNewsGenerator()
 
   const setActiveStep = (step: number) => {
     setState(prev => ({ ...prev, activeStep: step }))
@@ -129,6 +160,91 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
     setState(getInitialState())
   }
 
+  // Wizard functions
+  const handleStep0Submit = async (news: string) => {
+    setState(prev => ({
+      ...prev,
+      wizardState: { ...prev.wizardState, originalNews: news },
+      loading: true,
+      showError: false,
+    }))
+
+    try {
+      const response = await generateNews(news)
+      setState(prev => ({
+        ...prev,
+        wizardState: {
+          ...prev.wizardState,
+          titles: response.Titulos,
+          slug: response.Slug,
+          category: response.Categoria,
+          optimizedNews: response.Noticia,
+          selectedTitle: response.Titulos[0],
+          editableTitle: response.Titulos[0],
+          step: 1,
+        },
+        loading: false,
+        showError: false,
+      }))
+    } catch {
+      // Usar fallback local
+      const fallbackResponse = generateFallback(news)
+      setState(prev => ({
+        ...prev,
+        wizardState: {
+          ...prev.wizardState,
+          titles: fallbackResponse.Titulos,
+          slug: fallbackResponse.Slug,
+          category: fallbackResponse.Categoria,
+          optimizedNews: fallbackResponse.Noticia,
+          selectedTitle: fallbackResponse.Titulos[0],
+          editableTitle: fallbackResponse.Titulos[0],
+          step: 1,
+        },
+        loading: false,
+        showError: true,
+      }))
+    }
+  }
+
+  const handleStep1Submit = (title: string) => {
+    setState(prev => ({
+      ...prev,
+      wizardState: {
+        ...prev.wizardState,
+        selectedTitle: title,
+        editableTitle: title,
+        step: 2,
+      },
+    }))
+  }
+
+  const handleStep2Submit = (slug: string, category: string) => {
+    setState(prev => ({
+      ...prev,
+      wizardState: {
+        ...prev.wizardState,
+        slug,
+        category,
+        step: 3,
+      },
+    }))
+  }
+
+  const handlePublish = () => {
+    // Aquí iría la lógica de publicación real
+    alert("¡Noticia publicada exitosamente!")
+    handleRestart()
+  }
+
+  const handleRestart = () => {
+    setState(prev => ({
+      ...prev,
+      wizardState: getInitialWizardState(),
+      showError: false,
+    }))
+  }
+
   const isStepValid = () => {
     switch (state.activeStep) {
       case 0:
@@ -152,7 +268,10 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
   }
 
   const value: NewArticleContextType = {
-    state,
+    state: {
+      ...state,
+      loading,
+    },
     setActiveStep,
     setArticleContent,
     setTitles,
@@ -165,6 +284,11 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
     handleBack,
     handleReset,
     isStepValid,
+    handleStep0Submit,
+    handleStep1Submit,
+    handleStep2Submit,
+    handlePublish,
+    handleRestart,
   }
 
   return (

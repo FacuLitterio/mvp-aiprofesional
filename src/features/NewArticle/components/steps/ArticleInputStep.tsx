@@ -1,5 +1,5 @@
 import { AutoAwesome } from "@mui/icons-material"
-import { Alert, Box, TextField, Typography } from "@mui/material"
+import { Alert, Box, Button, TextField, Typography } from "@mui/material"
 import { Field, Form, Formik } from "formik"
 import * as Yup from "yup"
 import { useNewArticleContext } from "../../context/NewArticleContext"
@@ -14,10 +14,11 @@ const ArticleContentSchema = Yup.object().shape({
 })
 
 export const ArticleInputStep = () => {
-  const { state, setArticleContent } = useNewArticleContext()
+  const { state, setArticleContent, handleStep0Submit } = useNewArticleContext()
 
-  const handleSubmit = (values: { articleContent: string }) => {
+  const handleSubmit = async (values: { articleContent: string }) => {
     setArticleContent(values.articleContent)
+    await handleStep0Submit(values.articleContent)
   }
 
   return (
@@ -32,7 +33,14 @@ export const ArticleInputStep = () => {
         onSubmit={handleSubmit}
         enableReinitialize
       >
-        {({ values, errors, touched, handleChange, handleBlur }) => (
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          isSubmitting,
+        }) => (
           <Form>
             <Field
               as={TextField}
@@ -50,25 +58,9 @@ export const ArticleInputStep = () => {
               variant="outlined"
               error={touched.articleContent && Boolean(errors.articleContent)}
               helperText={
-                touched.articleContent && errors.articleContent ? (
-                  errors.articleContent
-                ) : (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography variant="caption" color="text.secondary">
-                      Mínimo 100 caracteres, máximo 20,000.
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {values.articleContent.length.toString()}/20,000
-                      caracteres
-                    </Typography>
-                  </Box>
-                )
+                touched.articleContent && errors.articleContent
+                  ? errors.articleContent
+                  : `Mínimo 100 caracteres, máximo 20,000. ${values.articleContent.length.toString()}/20,000 caracteres`
               }
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -104,6 +96,20 @@ export const ArticleInputStep = () => {
                 </Typography>
               </Box>
             </Alert>
+
+            <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                disabled={isSubmitting || state.loading}
+                startIcon={<AutoAwesome />}
+              >
+                {isSubmitting || state.loading
+                  ? "Generando..."
+                  : "Generar Contenido"}
+              </Button>
+            </Box>
           </Form>
         )}
       </Formik>
