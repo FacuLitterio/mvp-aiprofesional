@@ -4,6 +4,7 @@ import {
   AutoAwesome,
   ContentCopy as CopyIcon,
   Download as DownloadIcon,
+  Home as HomeIcon,
   RestartAlt as RestartIcon,
 } from "@mui/icons-material"
 import {
@@ -16,12 +17,15 @@ import {
   Paper,
   useTheme,
 } from "@mui/material"
+import { ROOT_PATH } from "common/routes"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { NEW_ARTICLE_STEPS } from "../constants/steps"
 import { useNewArticleContext } from "../context/NewArticleContext"
 
 export const NewArticleFooter = () => {
   const theme = useTheme()
+  const navigate = useNavigate()
   const {
     state,
     handleNext,
@@ -142,6 +146,15 @@ export const NewArticleFooter = () => {
                   sx={{ minWidth: 100 }}
                 >
                   Reiniciar
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<HomeIcon />}
+                  onClick={() => void navigate(ROOT_PATH)}
+                  sx={{ minWidth: 100 }}
+                >
+                  Volver al Inicio
                 </Button>
               </>
             ) : (
