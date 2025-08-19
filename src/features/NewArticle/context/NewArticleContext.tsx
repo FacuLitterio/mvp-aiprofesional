@@ -50,9 +50,12 @@ type NewArticleContextType = {
   // Wizard functions
   handleStep0Submit: (news: string) => Promise<void>
   handleStep1Submit: (title: string) => void
+  handleStep1Next: () => void
   handleStep2Submit: (slug: string, category: string) => void
   handlePublish: () => void
   handleRestart: () => void
+  // New function to update wizard titles
+  updateWizardTitle: (index: number, newTitle: string) => void
 }
 
 const NewArticleContext = createContext<NewArticleContextType | undefined>(
@@ -183,6 +186,7 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
           editableTitle: response.Titulos[0],
           step: 1,
         },
+        activeStep: 1, // Update activeStep to navigate to next step
         loading: false,
         showError: false,
       }))
@@ -201,6 +205,7 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
           editableTitle: fallbackResponse.Titulos[0],
           step: 1,
         },
+        activeStep: 1, // Update activeStep to navigate to next step
         loading: false,
         showError: true,
       }))
@@ -214,8 +219,19 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
         ...prev.wizardState,
         selectedTitle: title,
         editableTitle: title,
+        // Don't advance step here, just update the selected title
+      },
+    }))
+  }
+
+  const handleStep1Next = () => {
+    setState(prev => ({
+      ...prev,
+      wizardState: {
+        ...prev.wizardState,
         step: 2,
       },
+      activeStep: 2, // Update activeStep to navigate to next step
     }))
   }
 
@@ -227,6 +243,19 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
         slug,
         category,
         step: 3,
+      },
+      activeStep: 3, // Update activeStep to navigate to next step
+    }))
+  }
+
+  const updateWizardTitle = (index: number, newTitle: string) => {
+    setState(prev => ({
+      ...prev,
+      wizardState: {
+        ...prev.wizardState,
+        titles: prev.wizardState.titles.map((title, i) =>
+          i === index ? newTitle : title,
+        ),
       },
     }))
   }
@@ -253,8 +282,8 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
           state.articleContent.length <= 20000
         )
       case 1:
-        // Validate that at least one title is selected
-        return state.titles.some(title => title.isSelected)
+        // Validate that a title is selected in wizard state
+        return state.wizardState.selectedTitle.length > 0
       case 2:
         // Validate that metadata has required fields
         return (
@@ -286,9 +315,11 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
     isStepValid,
     handleStep0Submit,
     handleStep1Submit,
+    handleStep1Next,
     handleStep2Submit,
     handlePublish,
     handleRestart,
+    updateWizardTitle,
   }
 
   return (

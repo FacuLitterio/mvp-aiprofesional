@@ -1,5 +1,4 @@
 import {
-  AutoAwesome as AutoAwesomeIcon,
   Check as CheckIcon,
   Close as CloseIcon,
   Edit as EditIcon,
@@ -7,7 +6,6 @@ import {
 import {
   Alert,
   Box,
-  Button,
   Card,
   CardContent,
   Chip,
@@ -19,43 +17,19 @@ import {
 import { useState } from "react"
 import { useNewArticleContext } from "../../context/NewArticleContext"
 
-const getTitleTypeInfo = (type: string) => {
-  switch (type) {
-    case "h1":
-      return {
-        label: "Título Principal",
-        color: "primary" as const,
-        description: "Optimizado para SEO",
-      }
-    case "google":
-      return {
-        label: "Google",
-        color: "secondary" as const,
-        description: "Para resultados de búsqueda",
-      }
-    case "homepage":
-      return {
-        label: "Homepage",
-        color: "success" as const,
-        description: "Para página principal",
-      }
-    case "social":
-      return {
-        label: "Redes Sociales",
-        color: "warning" as const,
-        description: "Para compartir en redes",
-      }
-    default:
-      return { label: type, color: "primary" as const, description: "" }
-  }
-}
-
 export const TitlesStep = () => {
   const theme = useTheme()
-  const { state, updateTitle, regenerateTitles } = useNewArticleContext()
+  const { state, handleStep1Submit, updateWizardTitle } = useNewArticleContext()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState("")
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
+
+  // Convert wizard titles to TitleSuggestion format
+  const titleSuggestions = state.wizardState.titles.map((title, index) => ({
+    id: `title-${index.toString()}`,
+    title,
+    isSelected: title === state.wizardState.selectedTitle, // Check if this title is selected
+  }))
 
   const handleEditStart = (title: { id: string; title: string }) => {
     setEditingId(title.id)
@@ -64,7 +38,9 @@ export const TitlesStep = () => {
 
   const handleEditSave = () => {
     if (editingId) {
-      updateTitle(editingId, { title: editValue })
+      // Update the title in the wizard state
+      const titleIndex = parseInt(editingId.split("-")[1] ?? "0")
+      updateWizardTitle(titleIndex, editValue)
       setEditingId(null)
       setEditValue("")
     }
@@ -76,16 +52,13 @@ export const TitlesStep = () => {
   }
 
   const handleTitleSelect = (id: string) => {
-    // Deselect all titles first
-    state.titles.forEach(title => {
-      updateTitle(title.id, { isSelected: false })
-    })
-    // Select the clicked title
-    updateTitle(id, { isSelected: true })
+    const titleIndex = parseInt(id.split("-")[1] ?? "0")
+    const selectedTitle = state.wizardState.titles[titleIndex]
+    handleStep1Submit(selectedTitle) // This now only selects the title, doesn't advance
   }
 
   // Show empty state if no titles are available
-  if (state.titles.length === 0) {
+  if (state.wizardState.titles.length === 0) {
     return (
       <Box sx={{ mt: 3 }}>
         <Alert severity="info" sx={{ mb: 3 }}>
@@ -94,16 +67,6 @@ export const TitlesStep = () => {
             crear títulos optimizados para tu contenido.
           </Typography>
         </Alert>
-
-        <Button
-          variant="contained"
-          onClick={regenerateTitles}
-          startIcon={<AutoAwesomeIcon />}
-          size="large"
-          sx={{ mb: 3 }}
-        >
-          Generar Títulos
-        </Button>
 
         <Box
           sx={{
@@ -126,18 +89,6 @@ export const TitlesStep = () => {
 
   return (
     <Box sx={{ mt: 3 }}>
-      {/* Header */}
-      <Box sx={{ mb: 3 }}>
-        {/* Regenerate Button */}
-        <Button
-          variant="outlined"
-          onClick={regenerateTitles}
-          startIcon={<AutoAwesomeIcon />}
-        >
-          Regenerar Títulos
-        </Button>
-      </Box>
-
       {/* Titles Grid */}
       <Box
         sx={{
@@ -146,8 +97,7 @@ export const TitlesStep = () => {
           gap: 3,
         }}
       >
-        {state.titles.map(title => {
-          const typeInfo = getTitleTypeInfo(title.type)
+        {titleSuggestions.map(title => {
           const isEditing = editingId === title.id
 
           return (
@@ -161,6 +111,7 @@ export const TitlesStep = () => {
                 transition: "all 0.2s ease-in-out",
                 position: "relative",
                 overflow: "visible",
+                height: "fit-content",
                 "&:hover": {
                   borderColor: theme.palette.primary.main,
                   boxShadow: 2,
@@ -202,35 +153,9 @@ export const TitlesStep = () => {
                 </Box>
               )}
 
-              <CardContent>
-                {/* Header with type label and edit button */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    mb: 2,
-                  }}
-                >
-                  <Box>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        color: theme.palette.text.primary,
-                        fontWeight: 600,
-                        mb: 0.5,
-                      }}
-                    >
-                      {typeInfo.label}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      color="text.secondary"
-                      display="block"
-                    >
-                      {typeInfo.description}
-                    </Typography>
-                  </Box>
+              <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+                {/* Edit button - absolutely positioned */}
+                {!isEditing && (
                   <IconButton
                     size="small"
                     onClick={e => {
@@ -238,16 +163,24 @@ export const TitlesStep = () => {
                       handleEditStart(title)
                     }}
                     sx={{
-                      ml: 1,
+                      position: "absolute",
+                      bottom: 8,
+                      right: 8,
                       opacity: hoveredCard === title.id ? 1 : 0,
                       transition: "opacity 0.2s ease-in-out",
                       visibility:
                         hoveredCard === title.id ? "visible" : "hidden",
+                      zIndex: 2,
+                      backgroundColor: theme.palette.background.paper,
+                      boxShadow: 1,
+                      "&:hover": {
+                        backgroundColor: theme.palette.action.hover,
+                      },
                     }}
                   >
                     <EditIcon fontSize="small" />
                   </IconButton>
-                </Box>
+                )}
 
                 {/* Title content */}
                 {isEditing ? (
@@ -288,16 +221,47 @@ export const TitlesStep = () => {
                     </IconButton>
                   </Box>
                 ) : (
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      fontWeight: title.isSelected ? 600 : 400,
-                      color: theme.palette.text.primary,
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {title.title}
-                  </Typography>
+                  <>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: title.isSelected ? 600 : 400,
+                        color: theme.palette.text.primary,
+                        lineHeight: 1.4,
+                        mb: 1.5,
+                      }}
+                    >
+                      {title.title}
+                    </Typography>
+
+                    {/* Chips section */}
+                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                      <Chip
+                        label="SEO Optimizado"
+                        color="info"
+                        size="small"
+                        sx={{
+                          fontSize: "0.7rem",
+                          height: 20,
+                          "& .MuiChip-label": {
+                            px: 1,
+                          },
+                        }}
+                      />
+                      <Chip
+                        label={`${title.title.length.toString()} caracteres`}
+                        color="info"
+                        size="small"
+                        sx={{
+                          fontSize: "0.7rem",
+                          height: 20,
+                          "& .MuiChip-label": {
+                            px: 1,
+                          },
+                        }}
+                      />
+                    </Box>
+                  </>
                 )}
               </CardContent>
             </Card>

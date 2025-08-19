@@ -31,7 +31,7 @@ export const LoadingBackdrop = ({
           {message}
         </Typography>
         <Typography variant="body2" color="inherit" sx={{ opacity: 0.8 }}>
-          Esto puede tomar unos minutos...
+          Esto puede demorar unos segundos...
         </Typography>
       </Box>
     </Backdrop>

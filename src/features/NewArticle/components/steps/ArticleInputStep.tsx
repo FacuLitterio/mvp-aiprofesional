@@ -1,5 +1,5 @@
 import { AutoAwesome } from "@mui/icons-material"
-import { Alert, Box, Button, TextField, Typography } from "@mui/material"
+import { Alert, Box, TextField, Typography } from "@mui/material"
 import { Field, Form, Formik } from "formik"
 import * as Yup from "yup"
 import { useNewArticleContext } from "../../context/NewArticleContext"
@@ -14,12 +14,7 @@ const ArticleContentSchema = Yup.object().shape({
 })
 
 export const ArticleInputStep = () => {
-  const { state, setArticleContent, handleStep0Submit } = useNewArticleContext()
-
-  const handleSubmit = async (values: { articleContent: string }) => {
-    setArticleContent(values.articleContent)
-    await handleStep0Submit(values.articleContent)
-  }
+  const { state, setArticleContent } = useNewArticleContext()
 
   return (
     <Box sx={{ mt: 3 }}>
@@ -30,17 +25,12 @@ export const ArticleInputStep = () => {
       <Formik
         initialValues={{ articleContent: state.articleContent }}
         validationSchema={ArticleContentSchema}
-        onSubmit={handleSubmit}
+        onSubmit={() => {
+          // Empty submit since we handle it in footer
+        }}
         enableReinitialize
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          isSubmitting,
-        }) => (
+        {({ values, errors, touched, handleChange, handleBlur }) => (
           <Form>
             <Field
               as={TextField}
@@ -96,20 +86,6 @@ export const ArticleInputStep = () => {
                 </Typography>
               </Box>
             </Alert>
-
-            <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                type="submit"
-                variant="contained"
-                size="large"
-                disabled={isSubmitting || state.loading}
-                startIcon={<AutoAwesome />}
-              >
-                {isSubmitting || state.loading
-                  ? "Generando..."
-                  : "Generar Contenido"}
-              </Button>
-            </Box>
           </Form>
         )}
       </Formik>

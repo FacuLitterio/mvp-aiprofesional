@@ -24,9 +24,9 @@ export const STEP_CONTENT: Record<number, StepContent> = {
       "Ingresa tu contenido de artículo sin procesar a continuación. Nuestra IA sugerirá mejoras de SEO.",
   },
   1: {
-    title: "Generar Títulos",
+    title: "Elige tu título optimizado",
     description:
-      "Crea títulos optimizados para SEO que capturen la atención de los lectores. Revisa y edita las sugerencias de títulos generadas por IA. Selecciona el título principal que mejor se adapte a tu contenido.",
+      "Selecciona uno de los títulos propuestos o edítalos según tus necesidades.",
   },
   2: {
     title: "Configurar Metadatos",

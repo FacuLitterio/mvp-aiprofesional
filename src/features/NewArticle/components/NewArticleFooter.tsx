@@ -1,11 +1,32 @@
+import { AutoAwesome } from "@mui/icons-material"
 import { Box, Button, Container, Paper, useTheme } from "@mui/material"
 import { NEW_ARTICLE_STEPS } from "../constants/steps"
 import { useNewArticleContext } from "../context/NewArticleContext"
 
 export const NewArticleFooter = () => {
   const theme = useTheme()
-  const { state, handleNext, handleBack, handleReset, isStepValid } =
-    useNewArticleContext()
+  const {
+    state,
+    handleNext,
+    handleBack,
+    handleReset,
+    isStepValid,
+    handleStep0Submit,
+    handleStep1Next,
+  } = useNewArticleContext()
+
+  const handleNextStep = async () => {
+    if (state.activeStep === 0) {
+      // For step 0, generate content with AI
+      await handleStep0Submit(state.articleContent)
+    } else if (state.activeStep === 1) {
+      // For step 1, advance to next step if title is selected
+      handleStep1Next()
+    } else {
+      // For other steps, just go to next
+      handleNext()
+    }
+  }
 
   return (
     <Paper
@@ -51,11 +72,16 @@ export const NewArticleFooter = () => {
             ) : (
               <Button
                 variant="contained"
-                onClick={handleNext}
-                disabled={!isStepValid()}
+                onClick={() => void handleNextStep()}
+                disabled={!isStepValid() || state.loading}
+                startIcon={state.activeStep === 0 ? <AutoAwesome /> : undefined}
                 sx={{ minWidth: 100 }}
               >
-                Siguiente
+                {state.loading && state.activeStep === 0
+                  ? "Generando..."
+                  : state.activeStep === 0
+                    ? "Generar Contenido"
+                    : "Siguiente"}
               </Button>
             )}
           </Box>

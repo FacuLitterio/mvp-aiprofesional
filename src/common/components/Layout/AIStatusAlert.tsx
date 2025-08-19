@@ -1,4 +1,3 @@
-import { CheckCircle } from "@mui/icons-material"
 import { Alert, AlertTitle, Box, Chip } from "@mui/material"
 import type { IAPIError } from "../../../features/NewArticle/types"
 
@@ -35,9 +34,8 @@ export const AIStatusAlert = ({
 
   if (step > 0 && !showError) {
     return (
-      <Alert severity="success" sx={{ mb: 3 }}>
+      <Alert severity="success">
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <CheckCircle />
           <span>Conectado con IA - Propuestas optimizadas</span>
         </Box>
       </Alert>
