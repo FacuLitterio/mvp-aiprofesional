@@ -1,5 +1,5 @@
-import { Home as HomeIcon } from "@mui/icons-material"
-import { Breadcrumbs, Link, Typography } from "@mui/material"
+import { Box, Breadcrumbs, Link, Typography } from "@mui/material"
+import AIProfesionalLogo from "common/assets/AIProfesional-Logo.svg"
 import { useAppSelector } from "common/store/hooks"
 import React from "react"
 import { useNavigate } from "react-router-dom"
@@ -37,8 +37,21 @@ export const Breadcrumb = () => {
                 },
               }}
             >
-              <HomeIcon fontSize="small" />
-              {node.text}
+              <Box
+                component="img"
+                src={AIProfesionalLogo}
+                alt="AIProfesional Logo"
+                sx={{
+                  width: 120,
+                  height: "auto",
+                  filter: "brightness(0) invert(1)",
+                  opacity: 0.7,
+                  transition: "opacity 0.2s ease-in-out",
+                  "&:hover": {
+                    opacity: 1,
+                  },
+                }}
+              />
             </Link>
           ) : (
             <Typography
