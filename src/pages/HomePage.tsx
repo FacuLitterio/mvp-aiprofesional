@@ -9,15 +9,26 @@ import {
   useTheme,
 } from "@mui/material"
 import AIProfesionalAvatar from "common/assets/AIProfesionalAvatar.png"
-import { NEW_PATH } from "common/routes"
-import { useState } from "react"
+import { AppBar } from "common/components/AppBar"
+import { NEW_PATH, ROOT_PATH } from "common/routes"
+import { useAppDispatch } from "common/store/hooks"
+import { replaceNodesBreadcrumb } from "common/store/slices/breadcrumb-slice"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 
 const HomePage = () => {
   const theme = useTheme()
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const [isHovered, setIsHovered] = useState(false)
   const [isImageHovered, setIsImageHovered] = useState(false)
+
+  // Set breadcrumb for home page
+  useEffect(() => {
+    dispatch(
+      replaceNodesBreadcrumb([{ text: "AiProfesional", url: ROOT_PATH }]),
+    )
+  }, [dispatch])
 
   const handleGenerateNews = () => {
     void navigate(NEW_PATH)
@@ -32,6 +43,7 @@ const HomePage = () => {
         overflow: "hidden",
       }}
     >
+      <AppBar />
       {/* Main Content */}
       <Container maxWidth="sm" sx={{ py: 4 }}>
         <Stack spacing={2} alignItems="center">
