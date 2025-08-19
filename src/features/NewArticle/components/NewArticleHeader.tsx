@@ -5,7 +5,7 @@ export const NewArticleHeader = () => {
     <AppBar position="static" elevation={2}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Generar Noticia SEO
+          Generador de Noticias con IA
         </Typography>
       </Toolbar>
     </AppBar>
