@@ -168,6 +168,7 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
     setState(prev => ({
       ...prev,
       wizardState: { ...prev.wizardState, originalNews: news },
+      articleContent: news, // Preserve the article content
       loading: true,
       showError: false,
     }))
@@ -186,6 +187,11 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
           editableTitle: response.Titulos[0],
           step: 1,
         },
+        metadata: {
+          ...prev.metadata,
+          slug: response.Slug, // Set the slug from API response
+        },
+        articleContent: news, // Preserve the article content
         activeStep: 1, // Update activeStep to navigate to next step
         loading: false,
         showError: false,
@@ -205,6 +211,11 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
           editableTitle: fallbackResponse.Titulos[0],
           step: 1,
         },
+        metadata: {
+          ...prev.metadata,
+          slug: fallbackResponse.Slug, // Set the slug from fallback response
+        },
+        articleContent: news, // Preserve the article content
         activeStep: 1, // Update activeStep to navigate to next step
         loading: false,
         showError: true,
@@ -285,10 +296,9 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
         // Validate that a title is selected in wizard state
         return state.wizardState.selectedTitle.length > 0
       case 2:
-        // Validate that metadata has required fields
+        // Validate that metadata has required fields (only slug and sections)
         return (
-          state.metadata.copete.trim().length > 0 &&
-          state.metadata.copete.length <= 155 &&
+          state.metadata.slug.trim().length > 0 &&
           state.metadata.sections.principal.trim().length > 0
         )
       default:

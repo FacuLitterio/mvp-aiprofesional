@@ -112,6 +112,7 @@ export const TitlesStep = () => {
                 position: "relative",
                 overflow: "visible",
                 height: "fit-content",
+                paddingTop: 1,
                 "&:hover": {
                   borderColor: theme.palette.primary.main,
                   boxShadow: 2,

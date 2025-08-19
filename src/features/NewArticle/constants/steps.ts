@@ -29,9 +29,9 @@ export const STEP_CONTENT: Record<number, StepContent> = {
       "Selecciona uno de los títulos propuestos o edítalos según tus necesidades.",
   },
   2: {
-    title: "Configurar Metadatos",
+    title: "Configura URL y categoría",
     description:
-      "Completa los metadatos para optimizar tu artículo en el CMS de IProfesional y mejorar el posicionamiento SEO.",
+      "Define el slug de la URL y la categoría para optimizar la organización del contenido.",
   },
   3: {
     title: "Vista Previa y Exportar",

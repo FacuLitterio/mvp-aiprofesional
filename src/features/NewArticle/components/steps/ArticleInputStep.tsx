@@ -19,7 +19,7 @@ export const ArticleInputStep = () => {
   return (
     <Box sx={{ mt: 3 }}>
       <Typography variant="h5" component="h2" gutterBottom>
-        Contenido Fuente
+        Contenido Fuente Crudo
       </Typography>
 
       <Formik
@@ -50,7 +50,7 @@ export const ArticleInputStep = () => {
               helperText={
                 touched.articleContent && errors.articleContent
                   ? errors.articleContent
-                  : `Mínimo 100 caracteres, máximo 20,000. ${values.articleContent.length.toString()}/20,000 caracteres`
+                  : `Mínimo 100 caracteres, máximo 20,000.\n${values.articleContent.length.toString()}/20,000 caracteres`
               }
               sx={{
                 "& .MuiOutlinedInput-root": {
