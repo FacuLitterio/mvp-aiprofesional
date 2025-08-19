@@ -16,7 +16,7 @@ import {
   Paper,
   useTheme,
 } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { NEW_ARTICLE_STEPS } from "../constants/steps"
 import { useNewArticleContext } from "../context/NewArticleContext"
 
@@ -56,6 +56,11 @@ export const NewArticleFooter = () => {
   const handleDownloadMenuClose = () => {
     setDownloadMenuAnchor(null)
   }
+
+  // Scroll to top when step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [state.activeStep])
 
   const handleNextStep = async () => {
     if (state.activeStep === 0) {
