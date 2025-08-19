@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
-import AIProfesionalLogo from "common/assets/AIProfesionalLogo.svg"
+import AIProfesionalLogo from "common/assets/AIProfesional-Logo.svg"
 import GithubButton from "common/components/Buttons/GithubButton"
 import GoogleButton from "common/components/Buttons/GoogleButton"
 import { FORGOT_PASSWORD_PATH, REGISTER_PATH, ROOT_PATH } from "common/routes"
@@ -60,7 +60,7 @@ const LoginPage = () => {
             justifyContent: "center",
           }}
         >
-          <Stack spacing={3}>
+          <Stack spacing={2}>
             {/* Logo */}
             <Box>
               <Box
@@ -68,8 +68,7 @@ const LoginPage = () => {
                 src={AIProfesionalLogo}
                 alt="AIProfesional Logo"
                 sx={{
-                  height: "auto",
-                  width: "auto",
+                  width: 240,
                 }}
               />
             </Box>
