@@ -1,4 +1,4 @@
-import { Article, AutoAwesome, NavigateNext } from "@mui/icons-material"
+import { Article, AutoAwesome, Image, NavigateNext } from "@mui/icons-material"
 import {
   Box,
   Card,
@@ -17,6 +17,7 @@ const HomePage = () => {
   const theme = useTheme()
   const navigate = useNavigate()
   const [isHovered, setIsHovered] = useState(false)
+  const [isImageHovered, setIsImageHovered] = useState(false)
 
   const handleGenerateNews = () => {
     void navigate(NEW_PATH)
@@ -32,8 +33,8 @@ const HomePage = () => {
       }}
     >
       {/* Main Content */}
-      <Container maxWidth="sm" sx={{ pt: 8, pb: 4 }}>
-        <Stack spacing={4} alignItems="center">
+      <Container maxWidth="sm" sx={{ py: 4 }}>
+        <Stack spacing={2} alignItems="center">
           {/* Welcome Section */}
           <Box textAlign="center">
             {/* AI Avatar */}
@@ -246,6 +247,110 @@ const HomePage = () => {
                     color: "white",
                     fontSize: 28,
                     opacity: isHovered ? 1 : 0.7,
+                    transition: "opacity 0.3s ease",
+                  }}
+                />
+              </Box>
+            </CardContent>
+          </Card>
+
+          {/* Image Generation Card */}
+          <Card
+            onMouseEnter={() => {
+              setIsImageHovered(true)
+            }}
+            onMouseLeave={() => {
+              setIsImageHovered(false)
+            }}
+            sx={{
+              width: "100%",
+              maxWidth: 650,
+              background: "rgba(255,255,255,0.1)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: 3,
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              transform: isImageHovered ? "translateY(-4px)" : "translateY(0)",
+              boxShadow: isImageHovered
+                ? "0 8px 32px rgba(0,0,0,0.3)"
+                : "0 4px 16px rgba(0,0,0,0.2)",
+              "&:hover": {
+                background: "rgba(255,255,255,0.15)",
+                border: "1px solid rgba(255,255,255,0.3)",
+              },
+            }}
+          >
+            <CardContent sx={{ p: 3 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                    flex: 1,
+                  }}
+                >
+                  {/* Icon */}
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 2,
+                      background: "rgba(255,255,255,0.2)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Image
+                      sx={{
+                        color: "white",
+                        fontSize: 28,
+                      }}
+                    />
+                  </Box>
+
+                  {/* Content */}
+                  <Box sx={{ flex: 1 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: "white",
+                        fontWeight: 600,
+                        mb: 0.5,
+                        fontSize: { xs: "1rem", sm: "1.1rem" },
+                      }}
+                    >
+                      Generar Imágenes
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "rgba(255,255,255,0.8)",
+                        lineHeight: 1.4,
+                        fontSize: { xs: "0.875rem", sm: "0.9rem" },
+                      }}
+                    >
+                      Crea imágenes personalizadas para acompañar tus artículos
+                      con IA generativa.
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* Arrow */}
+                <NavigateNext
+                  sx={{
+                    color: "white",
+                    fontSize: 28,
+                    opacity: isImageHovered ? 1 : 0.7,
                     transition: "opacity 0.3s ease",
                   }}
                 />
