@@ -51,126 +51,27 @@ type NewArticleProviderProps = {
   children: ReactNode
 }
 
-// Mock data for titles
-const generateMockTitles = (): TitleSuggestion[] => [
-  {
-    id: "h1-1",
-    title:
-      "Créditos UVA: Todo lo que necesitas saber sobre la nueva normativa 2024",
-    type: "h1",
-    isSelected: true,
+// Initial empty state
+const getInitialState = (): NewArticleState => ({
+  activeStep: 0,
+  articleContent: "",
+  titles: [],
+  metadata: {
+    copete: "",
+    volanta: "",
+    keywords: [],
+    sections: {
+      principal: "",
+      secundarias: [],
+    },
+    slug: "",
+    metaDescription: "",
+    subtitles: [],
   },
-  {
-    id: "google-1",
-    title: "Créditos UVA 2024: Guía completa de la nueva normativa",
-    type: "google",
-    isSelected: false,
-  },
-  {
-    id: "homepage-1",
-    title: "Nueva normativa de Créditos UVA: Cambios importantes para 2024",
-    type: "homepage",
-    isSelected: false,
-  },
-  {
-    id: "social-1",
-    title:
-      "¿Sabías que cambiaron las reglas de los Créditos UVA? Te contamos todo",
-    type: "social",
-    isSelected: false,
-  },
-]
-
-const generateAlternativeMockTitles = (): TitleSuggestion[] => [
-  {
-    id: "h1-2",
-    title:
-      "Créditos UVA 2024: La revolución en el sistema crediticio argentino",
-    type: "h1",
-    isSelected: true,
-  },
-  {
-    id: "google-2",
-    title: "Créditos UVA: Nueva normativa 2024 y cómo afecta a los usuarios",
-    type: "google",
-    isSelected: false,
-  },
-  {
-    id: "homepage-2",
-    title: "Todo sobre los Créditos UVA: Normativa actualizada para 2024",
-    type: "homepage",
-    isSelected: false,
-  },
-  {
-    id: "social-2",
-    title: "Créditos UVA: Los cambios que debes conocer en 2024",
-    type: "social",
-    isSelected: false,
-  },
-]
-
-// Mock data for metadata
-const generateMockMetadata = (): Metadata => ({
-  copete:
-    "Los Créditos UVA experimentan cambios significativos en 2024, afectando a miles de argentinos. Conoce las nuevas reglas, beneficios y cómo impactan en tu capacidad crediticia.",
-  volanta: "Nueva Normativa",
-  keywords: [
-    "Créditos UVA",
-    "normativa 2024",
-    "sistema crediticio",
-    "Argentina",
-    "capacidad crediticia",
-    "beneficios financieros",
-  ],
-  sections: {
-    principal: "Finanzas",
-    secundarias: ["Economía", "Política"],
-  },
-  slug: "creditos-uva-nueva-normativa-2024",
-  metaDescription:
-    "Descubre los cambios en los Créditos UVA para 2024. Nueva normativa que afecta el sistema crediticio argentino y tu capacidad de acceso al crédito.",
-  subtitles: [
-    "Cambios principales en la normativa UVA",
-    "Impacto en la capacidad crediticia",
-    "Beneficios para los usuarios",
-    "Cómo acceder a los nuevos créditos",
-  ],
-})
-
-const generateAlternativeMockMetadata = (): Metadata => ({
-  copete:
-    "El sistema de Créditos UVA se moderniza con nuevas regulaciones para 2024. Analizamos el impacto en el mercado crediticio y las oportunidades para los consumidores argentinos.",
-  volanta: "Sistema Modernizado",
-  keywords: [
-    "Créditos UVA",
-    "regulaciones 2024",
-    "mercado crediticio",
-    "consumidores",
-    "oportunidades financieras",
-    "Argentina",
-  ],
-  sections: {
-    principal: "Economía",
-    secundarias: ["Finanzas", "Mercado"],
-  },
-  slug: "creditos-uva-sistema-modernizado-2024",
-  metaDescription:
-    "El sistema de Créditos UVA se actualiza con nuevas regulaciones para 2024. Conoce el impacto en el mercado y las oportunidades para consumidores.",
-  subtitles: [
-    "Nuevas regulaciones del sistema UVA",
-    "Análisis del impacto en el mercado",
-    "Oportunidades para consumidores",
-    "Perspectivas para 2024",
-  ],
 })
 
 export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
-  const [state, setState] = useState<NewArticleState>({
-    activeStep: 0,
-    articleContent: "",
-    titles: generateMockTitles(),
-    metadata: generateMockMetadata(),
-  })
+  const [state, setState] = useState<NewArticleState>(getInitialState())
 
   const setActiveStep = (step: number) => {
     setState(prev => ({ ...prev, activeStep: step }))
@@ -194,15 +95,9 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
   }
 
   const regenerateTitles = () => {
-    // Toggle between two sets of mock data
-    const currentTitles = state.titles
-    const isFirstSet = currentTitles[0]?.id === "h1-1"
-    setState(prev => ({
-      ...prev,
-      titles: isFirstSet
-        ? generateAlternativeMockTitles()
-        : generateMockTitles(),
-    }))
+    // TODO: Integrate with AI endpoint to regenerate titles
+    console.log("Regenerating titles for content:", state.articleContent)
+    // This will be replaced with actual API call
   }
 
   const setMetadata = (metadata: Metadata) => {
@@ -217,15 +112,9 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
   }
 
   const regenerateMetadata = () => {
-    // Toggle between two sets of mock data
-    const currentMetadata = state.metadata
-    const isFirstSet = currentMetadata.copete.includes("cambios significativos")
-    setState(prev => ({
-      ...prev,
-      metadata: isFirstSet
-        ? generateAlternativeMockMetadata()
-        : generateMockMetadata(),
-    }))
+    // TODO: Integrate with AI endpoint to regenerate metadata
+    console.log("Regenerating metadata for content:", state.articleContent)
+    // This will be replaced with actual API call
   }
 
   const handleNext = () => {
@@ -237,19 +126,14 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
   }
 
   const handleReset = () => {
-    setState(prev => ({
-      ...prev,
-      activeStep: 0,
-      titles: generateMockTitles(),
-      metadata: generateMockMetadata(),
-    }))
+    setState(getInitialState())
   }
 
   const isStepValid = () => {
     switch (state.activeStep) {
       case 0:
         return (
-          state.articleContent.length >= 50 &&
+          state.articleContent.length >= 100 &&
           state.articleContent.length <= 20000
         )
       case 1:
