@@ -12,6 +12,13 @@ export const STEP_KEYS = {
   PREVIEW_EXPORT: 3,
 } as const
 
+export enum STEPPER_TITLES {
+  ARTICLE_INPUT = "Entrada de Artículo",
+  TITLES = "Títulos",
+  METADATA = "Metadatos",
+  PREVIEW_EXPORT = "Vista Previa y Exportar",
+}
+
 export type StepContent = {
   title: string
   description: string

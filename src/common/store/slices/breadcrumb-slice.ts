@@ -10,7 +10,7 @@ type BreadcrumbState = {
 }
 
 const initialState: BreadcrumbState = {
-  nodes: [{ text: "Home", url: "/" }],
+  nodes: [],
 }
 
 const slice = createSlice({

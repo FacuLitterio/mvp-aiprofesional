@@ -85,7 +85,7 @@ export const PreviewExportStep = () => {
                     Longitud del título
                   </Typography>
                   <Chip
-                    label={`${seoMetrics.titleLength.toString()} chars`}
+                    label={`${seoMetrics.titleLength.toString()} caracteres`}
                     color={seoMetrics.isValidTitle ? "success" : "warning"}
                     size="small"
                     variant="outlined"
@@ -106,7 +106,7 @@ export const PreviewExportStep = () => {
                     Longitud del slug
                   </Typography>
                   <Chip
-                    label={`${seoMetrics.slugLength.toString()} chars`}
+                    label={`${seoMetrics.slugLength.toString()} caracteres`}
                     color={seoMetrics.isValidSlug ? "success" : "warning"}
                     size="small"
                     variant="outlined"
