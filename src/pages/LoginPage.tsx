@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material"
 import AIProfesionalLogo from "common/assets/AIProfesional-Logo.svg"
-import GithubButton from "common/components/Buttons/GithubButton"
+import NorbertoZocco from "common/assets/NorbertoZocco.jpg"
 import GoogleButton from "common/components/Buttons/GoogleButton"
 import { FORGOT_PASSWORD_PATH, REGISTER_PATH, ROOT_PATH } from "common/routes"
 import { Form, Formik } from "formik"
@@ -83,7 +83,6 @@ const LoginPage = () => {
             {/* Botones sociales */}
             <Stack spacing={1.5}>
               <GoogleButton />
-              <GithubButton />
             </Stack>
 
             {/* Divider "or" */}
@@ -274,13 +273,14 @@ const LoginPage = () => {
           >
             <Box
               component="img"
-              src="https://randomuser.me/api/portraits/men/32.jpg"
-              alt="avatar"
+              src={NorbertoZocco}
+              alt="Norberto Zocco"
               sx={{
                 width: 48,
                 height: 48,
                 borderRadius: "50%",
                 mr: 2,
+                objectFit: "cover",
               }}
             />
             <Box>

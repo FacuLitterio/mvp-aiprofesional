@@ -16,6 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
+import NorbertoZocco from "common/assets/NorbertoZocco.jpg"
 import { CONFIRMATION_EMAIL_PATH, LOGIN_PATH } from "common/routes"
 import { Form, Formik } from "formik"
 import { useState } from "react"
@@ -267,22 +268,22 @@ const RegisterPage = () => {
             >
               &ldquo;
             </Box>
-            Landyf.ai hizo que lanzar mi producto fuera mucho más fácil.
+            AIProfesional revolucionó nuestro flujo editorial.
             <br />
-            ¡La página de aterrizaje generada por IA fue perfecta!
+            ¡Generamos contenido SEO-optimizado en minutos, no en horas!
             <Box
               component="span"
               sx={theme => ({ color: theme.palette.primary.main })}
             >
               {" "}
-              #AIMagic
+              #AIProfesional
             </Box>
+            <br />
             <Box
               component="span"
               sx={theme => ({ color: theme.palette.primary.main })}
             >
-              {" "}
-              #StartNow
+              #PeriodismoDigital
             </Box>
             <Box
               component="span"
@@ -305,21 +306,22 @@ const RegisterPage = () => {
           >
             <Box
               component="img"
-              src="https://randomuser.me/api/portraits/women/44.jpg"
-              alt="avatar"
+              src={NorbertoZocco}
+              alt="Norberto Zocco"
               sx={{
                 width: 48,
                 height: 48,
                 borderRadius: "50%",
                 mr: 2,
+                objectFit: "cover",
               }}
             />
             <Box>
               <Typography fontWeight={600} color="text.primary">
-                @sarah.codes
+                Norberto Zocco
               </Typography>
               <Typography variant="body2" color="primary.main">
-                Creadora Independiente
+                CEO & Founder
               </Typography>
             </Box>
           </Box>
