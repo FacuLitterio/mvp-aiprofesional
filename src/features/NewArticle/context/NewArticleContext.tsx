@@ -1,6 +1,7 @@
 import { createContext, type ReactNode, useContext, useState } from "react"
 import { useNewsGenerator } from "../hooks/useNewsGenerator"
 import type { WizardState } from "../types"
+import { convertMarkdownLinksToHTML, extractMarkdownLinks } from "../utils"
 
 export type TitleSuggestion = {
   id: string
@@ -182,6 +183,8 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
 
     try {
       const response = await generateNews(news)
+      const extractedLinks = extractMarkdownLinks(response.Noticia)
+
       setState(prev => ({
         ...prev,
         wizardState: {
@@ -189,9 +192,10 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
           titles: response.Titulos,
           slug: response.Slug,
           category: response.Categoria,
-          optimizedNews: response.Noticia,
+          optimizedNews: convertMarkdownLinksToHTML(response.Noticia),
           selectedTitle: response.Titulos[0],
           editableTitle: response.Titulos[0],
+          internalLinks: extractedLinks,
           step: 1,
         },
         metadata: {
@@ -206,6 +210,8 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
     } catch {
       // Usar fallback local
       const fallbackResponse = generateFallback(news)
+      const extractedLinks = extractMarkdownLinks(fallbackResponse.Noticia)
+
       setState(prev => ({
         ...prev,
         wizardState: {
@@ -213,9 +219,10 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
           titles: fallbackResponse.Titulos,
           slug: fallbackResponse.Slug,
           category: fallbackResponse.Categoria,
-          optimizedNews: fallbackResponse.Noticia,
+          optimizedNews: convertMarkdownLinksToHTML(fallbackResponse.Noticia),
           selectedTitle: fallbackResponse.Titulos[0],
           editableTitle: fallbackResponse.Titulos[0],
+          internalLinks: extractedLinks,
           step: 1,
         },
         metadata: {
@@ -306,9 +313,7 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
   // Export functions
   const generateHTML = () => {
     const subtitles = generateSubtitles(state.wizardState.optimizedNews || "")
-    const sanitizedContent = (state.wizardState.optimizedNews || "")
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
+    const sanitizedContent = state.wizardState.optimizedNews || ""
 
     return `<!DOCTYPE html>
 <html lang="es">
@@ -334,11 +339,12 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
 
   const generateMarkdown = () => {
     const subtitles = generateSubtitles(state.wizardState.optimizedNews || "")
+    const cleanContent = state.wizardState.optimizedNews || ""
     return `# ${state.wizardState.editableTitle}
 
 ${subtitles.map(sub => `## ${sub}`).join("\n\n")}
 
-${state.wizardState.optimizedNews}
+${cleanContent}
 
 ---
 **Categoría:** ${state.wizardState.category}  

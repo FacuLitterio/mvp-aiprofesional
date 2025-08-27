@@ -163,7 +163,7 @@ export const MetadataStep = () => {
                   wordBreak: "break-all",
                 }}
               >
-                https://ejemplo.com/noticias/
+                https://iprofesional.com/noticias/
                 {state.metadata.slug || "slug-ejemplo"}
               </Typography>
             </Box>

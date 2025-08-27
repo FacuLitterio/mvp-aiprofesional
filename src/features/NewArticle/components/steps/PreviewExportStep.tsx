@@ -9,11 +9,12 @@ import {
   Divider,
   Typography,
 } from "@mui/material"
+import parse from "html-react-parser"
 import { useNewArticleContext } from "../../context/NewArticleContext"
 import {
   calculateSEOMetrics,
   extractKeyTerms,
-  generateSubtitles,
+  parseInternalLink,
 } from "../../utils"
 
 export const PreviewExportStep = () => {
@@ -26,12 +27,9 @@ export const PreviewExportStep = () => {
     state.wizardState.optimizedNews || "",
   )
   const keyTerms = extractKeyTerms(state.wizardState.optimizedNews || "")
-  const subtitles = generateSubtitles(state.wizardState.optimizedNews || "")
 
-  // Sanitize content for display (basic sanitization)
-  const sanitizedContent = (state.wizardState.optimizedNews || "")
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
+  // Parse HTML content using html-react-parser
+  const parsedContent = parse(state.wizardState.optimizedNews || "")
 
   // Check if we have content to preview
   const hasContent =
@@ -162,26 +160,44 @@ export const PreviewExportStep = () => {
             <Divider sx={{ my: 3 }} />
 
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-              Enlaces internos sugeridos
+              Enlaces internos
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               {state.wizardState.internalLinks.length > 0 ? (
-                state.wizardState.internalLinks.map((link, index) => (
-                  <Box
-                    key={index}
-                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                  >
-                    <ExternalLinkIcon
-                      sx={{ fontSize: 16, color: "primary.main" }}
-                    />
-                    <Typography variant="body2" color="primary.main">
-                      {link}
-                    </Typography>
-                  </Box>
-                ))
+                state.wizardState.internalLinks.map((link, index) => {
+                  const { url, text: linkText } = parseInternalLink(link)
+
+                  return (
+                    <Box
+                      key={index}
+                      sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                    >
+                      <ExternalLinkIcon
+                        sx={{ fontSize: 16, color: "primary.main" }}
+                      />
+                      <Typography
+                        variant="body2"
+                        component="a"
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          color: "primary.main",
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                          "&:hover": {
+                            textDecoration: "none",
+                          },
+                        }}
+                      >
+                        {linkText}
+                      </Typography>
+                    </Box>
+                  )
+                })
               ) : (
                 <Typography variant="body2" color="text.secondary">
-                  No hay enlaces sugeridos
+                  No hay enlaces internos
                 </Typography>
               )}
             </Box>
@@ -224,22 +240,7 @@ export const PreviewExportStep = () => {
                 {state.wizardState.editableTitle}
               </Typography>
 
-              {subtitles.map((subtitle, index) => (
-                <Typography
-                  key={index}
-                  variant="h5"
-                  component="h2"
-                  sx={{
-                    fontWeight: 600,
-                    mt: 3,
-                    mb: 2,
-                    color: "text.primary",
-                  }}
-                >
-                  {subtitle}
-                </Typography>
-              ))}
-
+              {/* Render the HTML content using html-react-parser */}
               <Box
                 sx={{
                   color: "text.primary",
@@ -252,9 +253,19 @@ export const PreviewExportStep = () => {
                     mt: 3,
                     mb: 2,
                   },
+                  "& ul": { mb: 2, pl: 3 },
+                  "& li": { mb: 1 },
+                  "& a": {
+                    color: "primary.main",
+                    textDecoration: "underline",
+                    "&:hover": {
+                      textDecoration: "none",
+                    },
+                  },
                 }}
-                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-              />
+              >
+                {parsedContent}
+              </Box>
             </Box>
           </CardContent>
         </Card>
