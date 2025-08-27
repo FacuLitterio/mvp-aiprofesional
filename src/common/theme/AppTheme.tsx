@@ -1,5 +1,6 @@
 import type { ThemeOptions } from "@mui/material/styles"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
+import { SnackbarProvider } from "notistack"
 import * as React from "react"
 import { colorSchemes, shadows, shape, typography } from "./themePrimitives"
 
@@ -36,8 +37,17 @@ export default function AppTheme(props: AppThemeProps) {
     return <React.Fragment>{children}</React.Fragment>
   }
   return (
-    <ThemeProvider theme={theme} disableTransitionOnChange defaultMode="dark">
-      {children}
+    <ThemeProvider theme={theme} disableTransitionOnChange defaultMode="light">
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        autoHideDuration={3000}
+      >
+        {children}
+      </SnackbarProvider>
     </ThemeProvider>
   )
 }

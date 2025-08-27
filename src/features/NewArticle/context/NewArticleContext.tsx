@@ -1,3 +1,4 @@
+import { useSnackbar } from "notistack"
 import { createContext, type ReactNode, useContext, useState } from "react"
 import { useNewsGenerator } from "../hooks/useNewsGenerator"
 import type { WizardState } from "../types"
@@ -113,6 +114,7 @@ const getInitialState = (): NewArticleState => ({
 export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
   const [state, setState] = useState<NewArticleState>(getInitialState())
   const { generateNews, generateFallback, loading } = useNewsGenerator()
+  const { enqueueSnackbar } = useSnackbar()
 
   const setActiveStep = (step: number) => {
     setState(prev => ({ ...prev, activeStep: step }))
@@ -329,9 +331,12 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
   const copyToClipboard = async (content: string) => {
     try {
       await navigator.clipboard.writeText(content)
-      // Could add a toast notification here
+      enqueueSnackbar("Copiado al portapapeles")
     } catch (err) {
       console.error("Failed to copy to clipboard:", err)
+      enqueueSnackbar("Error al copiar el contenido", {
+        variant: "error",
+      })
     }
   }
 
@@ -348,6 +353,9 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
+    enqueueSnackbar("Archivo descargado", {
+      variant: "success",
+    })
   }
 
   const handlePublish = () => {
