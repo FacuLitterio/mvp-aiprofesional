@@ -7,18 +7,9 @@ import {
   Home as HomeIcon,
   RestartAlt as RestartIcon,
 } from "@mui/icons-material"
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Menu,
-  MenuItem,
-  Paper,
-  useTheme,
-} from "@mui/material"
+import { Box, Button, Container, Divider, Paper, useTheme } from "@mui/material"
 import { ROOT_PATH } from "common/routes"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { NEW_ARTICLE_STEPS } from "../constants/steps"
 import { useNewArticleContext } from "../context/NewArticleContext"
@@ -37,29 +28,7 @@ export const NewArticleFooter = () => {
     copyToClipboard,
     downloadFile,
     generateHTML,
-    generateMarkdown,
   } = useNewArticleContext()
-
-  // Menu states
-  const [copyMenuAnchor, setCopyMenuAnchor] = useState<null | HTMLElement>(null)
-  const [downloadMenuAnchor, setDownloadMenuAnchor] =
-    useState<null | HTMLElement>(null)
-
-  const handleCopyMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setCopyMenuAnchor(event.currentTarget)
-  }
-
-  const handleCopyMenuClose = () => {
-    setCopyMenuAnchor(null)
-  }
-
-  const handleDownloadMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setDownloadMenuAnchor(event.currentTarget)
-  }
-
-  const handleDownloadMenuClose = () => {
-    setDownloadMenuAnchor(null)
-  }
 
   // Scroll to top when step changes
   useEffect(() => {
@@ -123,19 +92,26 @@ export const NewArticleFooter = () => {
                   variant="outlined"
                   color="secondary"
                   startIcon={<CopyIcon />}
-                  onClick={handleCopyMenuOpen}
+                  onClick={() => {
+                    void copyToClipboard(generateHTML())
+                  }}
                   sx={{ minWidth: 120 }}
                 >
-                  Copiar
+                  Copiar HTML
                 </Button>
                 <Button
                   variant="outlined"
                   color="secondary"
                   startIcon={<DownloadIcon />}
-                  onClick={handleDownloadMenuOpen}
+                  onClick={() => {
+                    downloadFile(
+                      generateHTML(),
+                      `${state.wizardState.slug}.html`,
+                    )
+                  }}
                   sx={{ minWidth: 130 }}
                 >
-                  Descargar
+                  Descargar HTML
                 </Button>
                 <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
                 <Button
@@ -161,7 +137,9 @@ export const NewArticleFooter = () => {
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => void handleNextStep()}
+                onClick={() => {
+                  void handleNextStep()
+                }}
                 disabled={!isStepValid() || state.loading}
                 endIcon={
                   state.activeStep === 0 ? (
@@ -182,54 +160,6 @@ export const NewArticleFooter = () => {
           </Box>
         </Box>
       </Container>
-
-      {/* Copy Menu */}
-      <Menu
-        anchorEl={copyMenuAnchor}
-        open={Boolean(copyMenuAnchor)}
-        onClose={handleCopyMenuClose}
-      >
-        <MenuItem
-          onClick={() => {
-            void copyToClipboard(generateHTML())
-            handleCopyMenuClose()
-          }}
-        >
-          Copiar HTML
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            void copyToClipboard(generateMarkdown())
-            handleCopyMenuClose()
-          }}
-        >
-          Copiar Markdown
-        </MenuItem>
-      </Menu>
-
-      {/* Download Menu */}
-      <Menu
-        anchorEl={downloadMenuAnchor}
-        open={Boolean(downloadMenuAnchor)}
-        onClose={handleDownloadMenuClose}
-      >
-        <MenuItem
-          onClick={() => {
-            downloadFile(generateHTML(), `${state.wizardState.slug}.html`)
-            handleDownloadMenuClose()
-          }}
-        >
-          Descargar HTML
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            downloadFile(generateMarkdown(), `${state.wizardState.slug}.md`)
-            handleDownloadMenuClose()
-          }}
-        >
-          Descargar Markdown
-        </MenuItem>
-      </Menu>
     </Paper>
   )
 }
