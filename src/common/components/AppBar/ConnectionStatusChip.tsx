@@ -1,18 +1,10 @@
 import { Chip, Tooltip, useTheme } from "@mui/material"
-import { NewArticleContext } from "features/NewArticle/context/NewArticleContext"
+import { useNewArticleContext } from "features/NewArticle/context/NewArticleContext"
 import { motion } from "framer-motion"
-import { useContext } from "react"
 
 export const ConnectionStatusChip = () => {
   const theme = useTheme()
-
-  // Try to get context, but don't throw error if not available
-  const context = useContext(NewArticleContext)
-
-  // If context is not available, don't render the chip
-  if (!context) {
-    return null
-  }
+  const context = useNewArticleContext()
 
   const { state } = context
 
