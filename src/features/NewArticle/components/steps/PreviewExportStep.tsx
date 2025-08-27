@@ -1,4 +1,7 @@
-import { OpenInNew as ExternalLinkIcon } from "@mui/icons-material"
+import {
+  OpenInNew as ExternalLinkIcon,
+  InfoOutlined as InfoIcon,
+} from "@mui/icons-material"
 import {
   Alert,
   Box,
@@ -7,6 +10,8 @@ import {
   CardContent,
   Chip,
   Divider,
+  IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material"
 import parse from "html-react-parser"
@@ -16,6 +21,56 @@ import {
   extractKeyTerms,
   parseInternalLink,
 } from "../../utils"
+
+// Componente para métricas SEO con información
+const SEOMetricItem = ({
+  label,
+  value,
+  color,
+  infoText,
+}: {
+  label: string
+  value: string
+  color: "success" | "warning" | "error" | "info"
+  infoText: string
+}) => (
+  <Box>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        mb: 1,
+      }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+        <Typography variant="body2" color="text.secondary">
+          {label}
+        </Typography>
+        <Tooltip
+          title={infoText}
+          arrow
+          placement="top"
+          sx={{
+            "& .MuiTooltip-tooltip": {
+              bgcolor: "rgba(0, 0, 0, 0.87)",
+              color: "white",
+              fontSize: "0.75rem",
+              maxWidth: 300,
+              p: 1.5,
+              lineHeight: 1.4,
+            },
+          }}
+        >
+          <IconButton size="small" sx={{ p: 0.25 }}>
+            <InfoIcon sx={{ fontSize: 16, color: "text.secondary" }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <Chip label={value} color={color} size="small" variant="outlined" />
+    </Box>
+  </Box>
+)
 
 export const PreviewExportStep = () => {
   const { state, handleRestart } = useNewArticleContext()
@@ -70,80 +125,60 @@ export const PreviewExportStep = () => {
             </Typography>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 1,
-                  }}
-                >
-                  <Typography variant="body2" color="text.secondary">
-                    Longitud del título
-                  </Typography>
-                  <Chip
-                    label={`${seoMetrics.titleLength.toString()} caracteres`}
-                    color={seoMetrics.isValidTitle ? "success" : "warning"}
-                    size="small"
-                    variant="outlined"
-                  />
-                </Box>
-              </Box>
+              <SEOMetricItem
+                label="Longitud del título"
+                value={`${seoMetrics.titleLength.toString()} caracteres`}
+                color={seoMetrics.isValidTitle ? "success" : "warning"}
+                infoText="El título debe tener entre 35 y 65 caracteres para que aparezca completo en los resultados de búsqueda. Títulos muy cortos no describen bien el contenido, mientras que títulos muy largos se cortan y no se ven completos."
+              />
 
-              <Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 1,
-                  }}
-                >
-                  <Typography variant="body2" color="text.secondary">
-                    Longitud del slug
-                  </Typography>
-                  <Chip
-                    label={`${seoMetrics.slugLength.toString()} caracteres`}
-                    color={seoMetrics.isValidSlug ? "success" : "warning"}
-                    size="small"
-                    variant="outlined"
-                  />
-                </Box>
-              </Box>
+              <SEOMetricItem
+                label="Longitud del slug"
+                value={`${seoMetrics.slugLength.toString()} caracteres`}
+                color={seoMetrics.isValidSlug ? "success" : "warning"}
+                infoText="El slug es la parte final de la URL que identifica tu artículo. Debe tener entre 1 y 60 caracteres, usar solo letras minúsculas, números y guiones. No debe comenzar ni terminar con guiones. Un slug descriptivo hace que la URL sea más fácil de leer y recordar."
+              />
 
-              <Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 1,
-                  }}
-                >
-                  <Typography variant="body2" color="text.secondary">
-                    Densidad de palabras clave
-                  </Typography>
-                  <Chip
-                    label={`${seoMetrics.keywordDensity.toFixed(1)}%`}
-                    color={
-                      seoMetrics.keywordDensity > 0 &&
-                      seoMetrics.keywordDensity < 5
-                        ? "success"
-                        : "info"
-                    }
-                    size="small"
-                    variant="outlined"
-                  />
-                </Box>
-              </Box>
+              <SEOMetricItem
+                label="Densidad de palabras clave"
+                value={`${seoMetrics.keywordDensity.toFixed(1)}%`}
+                color={
+                  seoMetrics.keywordDensity > 0 && seoMetrics.keywordDensity < 5
+                    ? "success"
+                    : "info"
+                }
+                infoText="La densidad de palabras clave indica qué tan frecuentemente aparece la palabra principal del título en el contenido. Debe estar entre 0.5% y 2.5% para que el contenido se vea natural. Una densidad muy baja significa que la palabra principal no está bien integrada en el texto, mientras que una densidad muy alta puede hacer que el texto se vea forzado."
+              />
             </Box>
 
             <Divider sx={{ my: 3 }} />
 
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-              Términos clave detectados
-            </Typography>
+            <Box
+              sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 2 }}
+            >
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                Términos clave detectados
+              </Typography>
+              <Tooltip
+                title="Los términos clave son las palabras más importantes que aparecen en tu artículo. Se extraen automáticamente del contenido, excluyendo palabras comunes como 'el', 'la', 'de', etc. Estos términos te ayudan a identificar los temas principales que estás tratando en tu artículo."
+                arrow
+                placement="top"
+                sx={{
+                  "& .MuiTooltip-tooltip": {
+                    bgcolor: "rgba(0, 0, 0, 0.87)",
+                    color: "white",
+                    fontSize: "0.75rem",
+                    maxWidth: 300,
+                    p: 1.5,
+                    lineHeight: 1.4,
+                  },
+                }}
+              >
+                <IconButton size="small" sx={{ p: 0.25 }}>
+                  <InfoIcon sx={{ fontSize: 16, color: "text.secondary" }} />
+                </IconButton>
+              </Tooltip>
+            </Box>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
               {keyTerms.slice(0, 8).map((term, index) => (
                 <Chip
@@ -159,9 +194,32 @@ export const PreviewExportStep = () => {
 
             <Divider sx={{ my: 3 }} />
 
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-              Enlaces internos
-            </Typography>
+            <Box
+              sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 2 }}
+            >
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                Enlaces internos
+              </Typography>
+              <Tooltip
+                title="Los enlaces internos son enlaces que conectan tu artículo con otras páginas relacionadas. Estos enlaces ayudan a los lectores a encontrar más información sobre temas relacionados y mejoran la navegación en tu sitio web. Se muestran como enlaces clickeables que abren en nueva pestaña."
+                arrow
+                placement="top"
+                sx={{
+                  "& .MuiTooltip-tooltip": {
+                    bgcolor: "rgba(0, 0, 0, 0.87)",
+                    color: "white",
+                    fontSize: "0.75rem",
+                    maxWidth: 300,
+                    p: 1.5,
+                    lineHeight: 1.4,
+                  },
+                }}
+              >
+                <IconButton size="small" sx={{ p: 0.25 }}>
+                  <InfoIcon sx={{ fontSize: 16, color: "text.secondary" }} />
+                </IconButton>
+              </Tooltip>
+            </Box>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               {state.wizardState.internalLinks.length > 0 ? (
                 state.wizardState.internalLinks.map((link, index) => {
