@@ -63,7 +63,6 @@ type NewArticleContextType = {
   copyToClipboard: (content: string) => Promise<void>
   downloadFile: (content: string, filename: string) => void
   generateHTML: () => string
-  generateMarkdown: () => string
 }
 
 const NewArticleContext = createContext<NewArticleContextType | undefined>(
@@ -299,57 +298,32 @@ export const NewArticleProvider = ({ children }: NewArticleProviderProps) => {
     }))
   }
 
-  // Helper function to generate subtitles from content
-  const generateSubtitles = (content: string): string[] => {
-    const subtitleMatches = content.match(/<h2[^>]*>(.*?)<\/h2>/g)
-    if (subtitleMatches) {
-      return subtitleMatches.map(match =>
-        match.replace(/<h2[^>]*>(.*?)<\/h2>/, "$1"),
-      )
-    }
-    return []
+  // Helper function to escape HTML entities
+  const escapeHtml = (text: string): string => {
+    const div = document.createElement("div")
+    div.textContent = text
+    return div.innerHTML
   }
 
   // Export functions
   const generateHTML = () => {
-    const subtitles = generateSubtitles(state.wizardState.optimizedNews || "")
-    const sanitizedContent = state.wizardState.optimizedNews || ""
+    const optimizedContent = state.wizardState.optimizedNews || ""
 
     return `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${state.wizardState.editableTitle}</title>
-    <meta name="description" content="${subtitles[0] || ""}">
-</head>
-<body>
-    <article>
-        <h1>${state.wizardState.editableTitle}</h1>
-        ${subtitles.map(sub => `<h2>${sub}</h2>`).join("\n        ")}
-        <div>${sanitizedContent}</div>
-        <footer>
-            <p>Categoría: ${state.wizardState.category}</p>
-            <p>Slug: ${state.wizardState.slug}</p>
-        </footer>
-    </article>
-</body>
-</html>`
-  }
-
-  const generateMarkdown = () => {
-    const subtitles = generateSubtitles(state.wizardState.optimizedNews || "")
-    const cleanContent = state.wizardState.optimizedNews || ""
-    return `# ${state.wizardState.editableTitle}
-
-${subtitles.map(sub => `## ${sub}`).join("\n\n")}
-
-${cleanContent}
-
----
-**Categoría:** ${state.wizardState.category}  
-**Slug:** ${state.wizardState.slug}  
-**Enlaces internos sugeridos:** ${state.wizardState.internalLinks.join(", ")}`
+              <html lang="es">
+              <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>${escapeHtml(state.wizardState.editableTitle)}</title>
+                  <meta name="description" content="${escapeHtml(state.wizardState.editableTitle)}">
+              </head>
+              <body>
+                  <article>
+                      <h1>${escapeHtml(state.wizardState.editableTitle)}</h1>
+                      <div>${optimizedContent}</div>
+                  </article>
+              </body>
+              </html>`
   }
 
   const copyToClipboard = async (content: string) => {
@@ -362,7 +336,10 @@ ${cleanContent}
   }
 
   const downloadFile = (content: string, filename: string) => {
-    const blob = new Blob([content], { type: "text/plain" })
+    // Determine MIME type based on file extension
+    const mimeType = filename.endsWith(".html") ? "text/html" : "text/plain"
+
+    const blob = new Blob([content], { type: mimeType })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
@@ -432,7 +409,6 @@ ${cleanContent}
     copyToClipboard,
     downloadFile,
     generateHTML,
-    generateMarkdown,
   }
 
   return (

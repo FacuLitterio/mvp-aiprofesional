@@ -1,15 +1,26 @@
-// Function to extract markdown links from HTML content
+// Function to extract markdown links and HTML links from content
 export const extractMarkdownLinks = (htmlContent: string): string[] => {
   if (!htmlContent) return []
 
+  const links: string[] = []
+
   // Match markdown links: [text](url)
   const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
-  const links: string[] = []
-  let match
+  let markdownMatch
 
-  while ((match = markdownLinkRegex.exec(htmlContent)) !== null) {
-    const linkText = match[1]
-    const linkUrl = match[2]
+  while ((markdownMatch = markdownLinkRegex.exec(htmlContent)) !== null) {
+    const linkText = markdownMatch[1]
+    const linkUrl = markdownMatch[2]
+    links.push(`${linkText} (${linkUrl})`)
+  }
+
+  // Match HTML links: <a href="url">text</a>
+  const htmlLinkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>([^<]+)<\/a>/g
+  let htmlMatch
+
+  while ((htmlMatch = htmlLinkRegex.exec(htmlContent)) !== null) {
+    const linkUrl = htmlMatch[1]
+    const linkText = htmlMatch[2].trim()
     links.push(`${linkText} (${linkUrl})`)
   }
 
